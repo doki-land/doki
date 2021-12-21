@@ -1,0 +1,15 @@
+[[sections]]
+title = "Getting Started"
+items = [
+    { name = "Installation", href = "getting_started/installation" },
+    { name = "Installation", href = "getting_started/installation" },
+    { name = "Installation", href = "getting_started/installation" }
+]
+
+[[sections]]
+title = "Basics"
+items = [
+    { name = "Installation", href = "getting_started/installation" },
+    { name = "Installation", href = "getting_started/installation" },
+    { name = "Installation", href = "getting_started/installation" }
+]

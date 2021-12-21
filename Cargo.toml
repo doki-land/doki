@@ -1,0 +1,13 @@
+[workspace]
+members = ["projects/*"]
+default-members = [
+    "projects/doki-core",
+]
+exclude = [
+    "projects/.DS_Store",
+    "projects/doki-docs",
+]
+
+[profile.release]
+lto = true
+panic = "abort"
