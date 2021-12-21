@@ -7,11 +7,11 @@
     },
     version: {
         enable: false,
-        head_version: "next"
+        "head": "next"
     },
     i18n: {
         enable: false,
-        head_version: "next",
+        "head": "next",
         // which should used as reference
         main: "zh-hans"
     }

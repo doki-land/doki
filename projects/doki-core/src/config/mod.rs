@@ -7,7 +7,7 @@ mod version;
 
 pub use self::{i18n::DokiInternationalization, path::DokiPath, version::DokiVersionControl};
 
-use self::parsing::{is_default,parse_null_as_default, parse_url_base, parse_url_end};
+use self::parsing::{parse_as_lowercase_string,is_default,parse_null_as_default, parse_url_base, parse_url_end};
 use serde::{
     de,
     de::{value::SeqAccessDeserializer, SeqAccess, Visitor},

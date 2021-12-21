@@ -2,17 +2,7 @@ use super::*;
 
 #[test]
 fn config() {
-    assert_eq!(
-        json5::from_str(include_str!("config.json5")),
-        Ok(DokiConfig {
-            url_base: vec![String::from("a"), String::from("b")],
-            url_end: String::from(".html"),
-            version: DokiVersionControl {
-                enable: false
-            },
-            i18n: DokiInternationalization {
-                enable: false
-            }
-        }),
+    let out = json5::from_str::<DokiConfig>(include_str!("config.json5"));
+    debug_assert_eq!(format!("{:#?}", out), include_str!("config.yaml"),
     );
 }

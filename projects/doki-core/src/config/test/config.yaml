@@ -1,0 +1,17 @@
+Ok(
+    DokiConfig {
+        url_base: [
+            "a",
+            "b",
+        ],
+        url_end: ".html",
+        version: DokiVersionControl {
+            enable: false,
+            head: "next",
+        },
+        i18n: DokiInternationalization {
+            enable: false,
+            main: "zh-hans",
+        },
+    },
+)
