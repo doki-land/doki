@@ -4,7 +4,7 @@ pub struct DokiError {
 }
 #[derive(Debug, Clone)]
 pub enum DokiErrorKind {
-    UnknownError
+    UnknownError,
 }
 
 pub type Result<T> = std::result::Result<T, DokiError>;

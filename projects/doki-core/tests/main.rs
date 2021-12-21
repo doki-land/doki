@@ -4,4 +4,3 @@ mod config;
 fn ready() {
     println!("it works!")
 }
-
