@@ -1,10 +1,9 @@
 [package]
 name = "doki-core"
-publish = false
 version = "0.1.0"
 authors = ["Aster <192607617@qq.com>"]
 description = "..."
-repository = "..."
+repository = "https://github.com/doki-land/doki"
 readme = "Readme.md"
 license = "MPL-2.0"
 edition = "2018"

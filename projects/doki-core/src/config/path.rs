@@ -9,11 +9,11 @@ pub struct DokiPath {
 impl DokiConfig {
     pub fn build_url(&self, path: &DokiPath) -> String {
         let mut out: String = self.url_base.join("/");
-        if let true = self.version_enable() {
+        if let true = self.version.enable {
             out.write_char('/').ok();
             out.write_str(&path.version).ok();
         }
-        if let true = self.i18n_enable() {
+        if let true = self.i18n.enable {
             out.write_char('/').ok();
             out.write_str(&path.language).ok();
         }
@@ -21,10 +21,7 @@ impl DokiConfig {
             out.write_char('/').ok();
             out.write_str(&p).ok();
         }
-        match &self.url_end {
-            None => {}
-            Some(s) => out.push_str(s),
-        }
+        out.push_str(&self.url_end);
         return out;
     }
 }

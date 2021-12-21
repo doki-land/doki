@@ -1,15 +1,13 @@
 mod i18n;
 mod parsing;
+mod path;
 #[cfg(test)]
 mod test;
 mod version;
-mod path;
 
-use self::{
-    i18n::DokiInternationalization,
-    parsing::{parse_null_as_default, parse_url_base, parse_url_end},
-    version::DokiVersionControl,
-};
+pub use self::{i18n::DokiInternationalization, path::DokiPath, version::DokiVersionControl};
+
+use self::parsing::{is_default,parse_null_as_default, parse_url_base, parse_url_end};
 use serde::{
     de,
     de::{value::SeqAccessDeserializer, SeqAccess, Visitor},
@@ -22,19 +20,19 @@ pub struct DokiConfig {
     /// base url
     #[serde(skip_serializing_if = "Vec::is_empty")]
     #[serde(deserialize_with = "parse_url_base", default)]
-    url_base: Vec<String>,
+    pub url_base: Vec<String>,
     /// end of url
     /// - '/'
     /// - '.ext': e.g. '.html', '.php'
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "String::is_empty")]
     #[serde(deserialize_with = "parse_url_end", default)]
-    url_end: Option<String>,
+    pub url_end: String,
     /// [`DokiVersionControl`]
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "is_default")]
     #[serde(deserialize_with = "parse_null_as_default", default)]
-    version: Option<DokiVersionControl>,
+    pub version: DokiVersionControl,
     /// [`DokiInternationalization`]
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "is_default")]
     #[serde(deserialize_with = "parse_null_as_default", default)]
-    i18n: Option<DokiInternationalization>,
+    pub i18n: DokiInternationalization,
 }

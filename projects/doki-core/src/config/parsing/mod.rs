@@ -9,6 +9,10 @@ where
     Ok(opt.unwrap_or_default())
 }
 
+pub fn is_default<T: Default + PartialEq>(t: &T) -> bool {
+    *t == Default::default()
+}
+
 pub fn parse_url_base<'de, D>(deserializer: D) -> Result<Vec<String>, D::Error>
 where
     D: Deserializer<'de>,
@@ -47,14 +51,14 @@ where
     deserializer.deserialize_any(Accepted)
 }
 
-pub fn parse_url_end<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
+pub fn parse_url_end<'de, D>(deserializer: D) -> Result<String, D::Error>
 where
     D: Deserializer<'de>,
 {
     struct Accepted;
 
     impl<'de> Visitor<'de> for Accepted {
-        type Value = Option<String>;
+        type Value = String;
 
         fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
             formatter.write_str("url_end: '/' | '.extension'")
@@ -79,7 +83,7 @@ where
             };
             match out.is_empty() {
                 true => Err(E::custom("url_end: '/' | '.extension'")),
-                false => Ok(Some(out)),
+                false => Ok(out),
             }
         }
 
@@ -87,7 +91,7 @@ where
         where
             E: de::Error,
         {
-            Ok(None)
+            Ok(String::new())
         }
     }
 

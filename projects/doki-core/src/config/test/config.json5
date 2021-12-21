@@ -1,4 +1,18 @@
 {
     url_base: 'a/b',
-    url_end: '.html'
+    url_end: '.html',
+    syntax: {
+        parser: {
+            md: "commonmark"
+        }
+    },
+    version: {
+        enable: false,
+        head_version: "next"
+    },
+    i18n: {
+        enable: false,
+        // which should used as reference
+        main: "zh-hans"
+    }
 }
