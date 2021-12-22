@@ -2,12 +2,46 @@ use super::*;
 
 pub type FileResult<T> = jwalk::Result<DirEntry<T>>;
 
-#[derive(Debug, Default)]
 pub struct DirectoryWalker {
-    pub extension_select: HashSet<String>,
+    repository: Repository,
+    extension_select: HashSet<String>,
+}
+
+impl Debug for DirectoryWalker {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let w = &mut f.debug_struct("DirectoryWalker");
+        w.field("repository", &self.repository.path().to_string_lossy());
+        if !self.extension_select.is_empty() {
+            w.field("selected", &self.extension_select);
+        }
+        w.finish()
+    }
 }
 
 impl DirectoryWalker {
+    pub fn new<P: AsRef<Path>>(root: P) -> Result<Self> {
+        Ok(Self { repository: Repository::open(root)?, extension_select: Default::default() })
+    }
+    pub fn set_selected_extensions(&mut self, extensions: HashSet<String>) {
+        self.extension_select = extensions;
+    }
+}
+
+impl DirectoryWalker {
+    pub fn group_repo<P: AsRef<Path>>(&self, directory: P) -> Result<BTreeMap<Url, FileCommit>> {
+        let mut out = BTreeMap::default();
+        for (_, files) in self.group_file(directory.as_ref()) {
+            for path in files {
+                match FileCommit::new(&self.repository, &path) {
+                    Ok(o) => {
+                        out.insert(o.get_url(), o);
+                    }
+                    Err(_) => continue,
+                }
+            }
+        }
+        return Ok(out);
+    }
     pub fn group_file<P: AsRef<Path>>(&self, root: P) -> BTreeMap<String, Vec<PathBuf>> {
         let walk_dir = WalkDirGeneric::<(usize, bool)>::new(root).process_read_dir(|_, _, _, children| {
             // children.sort_by(file_sort);
@@ -21,12 +55,8 @@ impl DirectoryWalker {
             };
             let path = file.path();
             let ext = match path.extension().and_then(|f| f.to_str()) {
-                Some(s) if self.extension_select.is_empty() => {
-                    s
-                }
-                Some(s) if self.extension_select.contains(s) => {
-                    s
-                }
+                Some(s) if self.extension_select.is_empty() => s,
+                Some(s) if self.extension_select.contains(s) => s,
                 _ => continue,
             };
             match grouped.get_mut(ext) {
@@ -41,7 +71,6 @@ impl DirectoryWalker {
         return grouped;
     }
 }
-
 
 #[inline]
 #[allow(unused)]
