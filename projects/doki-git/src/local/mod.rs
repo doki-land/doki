@@ -6,15 +6,17 @@ use std::{
     fmt::{Debug, Formatter},
 };
 use std::cmp::Ordering;
-use std::ffi::OsString;
-use std::path::Path;
+use std::collections::{HashMap, HashSet};
+
+use std::path::{Path, PathBuf};
 use jwalk::{DirEntry, WalkDirGeneric};
 use project_root::get_project_root;
 
-
 mod commit;
+mod walk_dir;
 
 pub use self::commit::{FileCommit, FileCommitItem};
+pub use self::walk_dir::group_file;
 
 #[test]
 fn open() {
@@ -33,58 +35,8 @@ pub type FileResult<T> = jwalk::Result<DirEntry<T>>;
 #[test]
 fn walk() {
     let root = get_project_root().unwrap();
-    let walk_dir = WalkDirGeneric::<(usize, bool)>::new(root)
-        .process_read_dir(|_, _, _, children| {
-            children.sort_by(file_sort);
-            children.retain(file_remove);
-            children.iter_mut().for_each(file_skip);
-        });
-
-    for entry in walk_dir {
-        println!("{}", entry.unwrap().path().display());
-    }
-}
-
-#[inline]
-fn file_sort(a: &FileResult<(usize, bool)>, b: &FileResult<(usize, bool)>) -> Ordering {
-    match (a, b) {
-        (Ok(a), Ok(b)) => {
-            a.file_name.cmp(&b.file_name)
-        }
-        (Ok(_), Err(_)) => Ordering::Less,
-        (Err(_), Ok(_)) => Ordering::Greater,
-        (Err(_), Err(_)) => Ordering::Equal,
-    }
-}
-
-#[inline]
-fn file_remove(result: &FileResult<(usize, bool)>) -> bool {
-    let file = match result {
-        Ok(file) => { file }
-        Err(_) => { return false; }
-    };
-    println!("{:?}", file.file_name);
-    return true;
-    // result.as_ref().map(|dir_entry| {
-    //     dir_entry.file_name
-    //         .to_str()
-    //         .map(|s| s.starts_with('.'))
-    //         .unwrap_or(true)
-    // }).unwrap_or(true)
-}
-
-#[inline]
-#[allow(unused)]
-fn file_skip(result: &mut FileResult<(usize, bool)>) {
-    if let Ok(maybe_dir) = result {
-        if !maybe_dir.file_type.is_dir() {
-            return;
-        }
-        // println!("{:?}", dir_entry.file_name);
-        match maybe_dir.file_name().to_str() {
-            Some("target") => { maybe_dir.read_children_path = None }
-            Some(".git") => { maybe_dir.read_children_path = None }
-            _ => ()
-        }
-    }
+    let mut skip = HashSet::new();
+    skip.insert("md".to_string());
+    skip.insert("html".to_string());
+    println!("{:#?}", group_file(root, Some(&skip)))
 }
