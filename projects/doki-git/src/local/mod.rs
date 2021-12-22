@@ -1,3 +1,7 @@
+use std::cmp::Ordering;
+use std::collections::{BTreeMap, BTreeSet, HashSet};
+use std::fmt::{Debug, Formatter};
+use std::hash::Hash;
 use std::path::Path;
 use std::time::{Duration, UNIX_EPOCH};
 use chrono::NaiveDateTime;
@@ -11,21 +15,42 @@ fn open() {
     ;
     let repo = Repository::open(root).unwrap();
     let file = repo.blame_file(&Path::new("Cargo.toml"), None).unwrap();
-
-    repo.reflog("a");
+    let mut record = FileCommit {
+        inner: Default::default()
+    };
     for i in file.iter() {
-        //i.final_signature()
-        println!("{:?}", i.orig_commit_id());
-        println!("{:?}", i.lines_in_hunk());
-        let sig = i.orig_signature();
-        println!("{:?}", sig.name());
-        println!("{:?}", sig.email());
-        println!("{:?}", NaiveDateTime::from_timestamp(sig.when().seconds(), 0));
-        println!();
+        record.insert(FileCommitItem::from(i));
+    }
+    println!("{:#?}", record)
+}
+
+pub struct FileCommit {
+    inner: BTreeMap<NaiveDateTime, FileCommitItem>,
+}
+
+
+impl FileCommit {
+
+
+
+    pub fn insert(&mut self, item: FileCommitItem) {
+        let key = item.time.to_owned();
+        match self.inner.get_mut(&key) {
+            None => { self.inner.insert(key, item); }
+            Some(s) => {
+                s.lines += item.lines
+            }
+        }
     }
 }
 
-#[derive(Debug)]
+impl Debug for FileCommit {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        f.debug_set().entries(self.inner.values()).finish()
+    }
+}
+
+
 pub struct FileCommitItem {
     id: Oid,
     lines: usize,
@@ -33,6 +58,20 @@ pub struct FileCommitItem {
     email: Option<String>,
     time: NaiveDateTime,
 }
+
+
+impl Debug for FileCommitItem {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let w = &mut f.debug_struct("Commit");
+        w.field("time", &self.time);
+        w.field("id", &self.id);
+        w.field("lines", &self.lines);
+        if let Some(s) = &self.name { w.field("name", s); }
+        if let Some(s) = &self.name { w.field("email", s); }
+        w.finish()
+    }
+}
+
 
 impl From<BlameHunk<'_>> for FileCommitItem {
     fn from(blame: BlameHunk) -> Self {
