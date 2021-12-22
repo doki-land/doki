@@ -1,10 +1,5 @@
-pub struct FileCommitItem {
-    id: Oid,
-    lines: usize,
-    name: Option<String>,
-    email: Option<String>,
-    time: NaiveDateTime,
-}
+use super::*;
+
 
 
 impl Debug for FileCommitItem {

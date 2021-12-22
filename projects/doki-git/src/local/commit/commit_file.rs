@@ -1,7 +1,5 @@
-pub struct FileCommit {
-    // TODO: use BTreeSet
-    inner: BTreeMap<NaiveDateTime, FileCommitItem>,
-}
+use super::*;
+
 
 
 impl FileCommit {

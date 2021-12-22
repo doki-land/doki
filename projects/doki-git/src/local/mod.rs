@@ -1,17 +1,13 @@
-use std::cmp::Ordering;
-use std::collections::{BTreeMap, BTreeSet, HashSet};
-use std::convert::TryFrom;
 use std::fmt::{Debug, Formatter};
-use std::hash::Hash;
-use std::path::Path;
-use std::time::{Duration, UNIX_EPOCH};
 use chrono::NaiveDateTime;
 use git2::{Blame, BlameHunk, Oid, Repository};
+use std::collections::BTreeMap;
+use std::path::Path;
 use project_root::get_project_root;
-use url::Url;
-use crate::Result;
 
 mod commit;
+
+pub use self::commit::{FileCommit, FileCommitItem};
 
 
 #[test]
