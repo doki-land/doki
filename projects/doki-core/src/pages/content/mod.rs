@@ -12,9 +12,9 @@ pub fn builder(is_night: ReadSignal<bool>) -> View<G> {
         .dyn_class("night", is_night)
         // .dyn_class("light", !is_night)
         .child(ContentPageHeader::create_component(()))
-        .child(DocumentFloatTOC::create_component(()))
+        .child(ContentPageFloatTOC::create_component(()))
         .child(ContentPageSidebar::create_component(()))
-        .child(DocumentContext::create_component(()))
+        .child(DocumentContent::create_component(()))
         .build()
 }
 
@@ -26,7 +26,7 @@ pub fn builder() -> View<G> {
         .build()
 }
 
-#[component(DocumentFloatTOC < G >)]
+#[component(ContentPageFloatTOC < G >)]
 pub fn builder() -> View<G> {
     nav()
         .class("nav-float-sidebar")
@@ -44,15 +44,13 @@ pub struct AdjacentPages {
     pub next: Option<(String, String)>,
 }
 
-#[component(DocumentContext < G >)]
+#[component(DocumentContent < G >)]
 fn builder() -> View<G> {
-
-
     main()
         .child(DocumentHeader::create_component(()))
         .child(DocumentArticle::create_component(()))
         .child(DocumentFooter::create_component(()))
-        .child(DocumentFloatTOC::create_component(()))
+        .child(ContentPageFloatTOC::create_component(()))
         .build()
 }
 

@@ -2,7 +2,7 @@ use super::*;
 
 #[component(DocumentFooter < G >)]
 pub fn builder() -> View<G> {
-    let nav = AdjacentPages { prev: Some(("a".to_string(), "b".to_string())), next: Some(("c".to_string(), "d".to_string())) };
+    let nav = AdjacentPages { prev: Some(("s".to_string(), "上一页".to_string())), next: Some(("c".to_string(), "下一页".to_string())) };
     let nav = Signal::new(nav);
     footer()
         .child(DocumentFootJump::create_component(nav.handle()))
