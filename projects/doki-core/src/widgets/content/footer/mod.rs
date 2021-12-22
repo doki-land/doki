@@ -15,37 +15,24 @@ pub fn builder() -> View<G> {
 //     </a>
 // </div>
 
-
-
-
 #[component(DocumentNav < G >)]
 pub fn builder(pages: ReadSignal<AdjacentPages>) -> View<G> {
     let prev = pages.get().prev.to_owned();
     let next = pages.get().next.to_owned();
-    nav().class("nav-content")
-        .dyn_child(move || {
-            match &prev {
-                None => { View::empty() }
-                Some(s) => { nav_span("prev", &s.0, &s.1) }
-            }
+    nav()
+        .class("nav-content")
+        .dyn_child(move || match &prev {
+            None => View::empty(),
+            Some(s) => nav_span("prev", &s.0, &s.1),
         })
-        .dyn_child(move || {
-            match &next {
-                None => { View::empty() }
-                Some(s) => { nav_span("next", &s.0, &s.1) }
-            }
+        .dyn_child(move || match &next {
+            None => View::empty(),
+            Some(s) => nav_span("next", &s.0, &s.1),
         })
         .build()
 }
 
 #[inline]
 pub fn nav_span<G: GenericNode>(kls: &str, link: &str, text: &str) -> View<G> {
-    span().class(kls).child(
-        a()
-            .class("nav-link")
-            .attr("aria-label", text)
-            .attr("href", link)
-            .text(text)
-            .build()
-    ).build()
+    span().class(kls).child(a().class("nav-link").attr("aria-label", text).attr("href", link).text(text).build()).build()
 }

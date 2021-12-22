@@ -1,5 +1,2 @@
 mod content;
-use sycamore::prelude::*;
-use sycamore::builder::html::*;
-
-
+use sycamore::{builder::html::*, prelude::*};

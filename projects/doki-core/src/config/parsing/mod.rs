@@ -52,8 +52,8 @@ where
 }
 
 pub fn parse_as_lowercase_string<'de, D>(deserializer: D) -> Result<String, D::Error>
-    where
-        D: Deserializer<'de>,
+where
+    D: Deserializer<'de>,
 {
     struct Accepted;
 
@@ -65,22 +65,21 @@ pub fn parse_as_lowercase_string<'de, D>(deserializer: D) -> Result<String, D::E
         }
 
         fn visit_str<E>(self, s: &str) -> Result<Self::Value, E>
-            where
-                E: de::Error,
+        where
+            E: de::Error,
         {
             Ok(s.to_lowercase())
         }
 
         fn visit_unit<E>(self) -> Result<Self::Value, E>
-            where
-                E: de::Error,
+        where
+            E: de::Error,
         {
             Ok(String::new())
         }
     }
     deserializer.deserialize_any(Accepted)
 }
-
 
 pub fn parse_url_end<'de, D>(deserializer: D) -> Result<String, D::Error>
 where

@@ -10,7 +10,7 @@ edition = "2018"
 
 [dependencies]
 json5 = "0.4.1"
-serde = {version = "1.0.132", features = ["derive"]}
+serde = { version = "1.0.132", features = ["derive"] }
 
 [dependencies.sycamore]
 version = "0.7.1"

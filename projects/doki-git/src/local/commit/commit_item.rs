@@ -1,19 +1,20 @@
 use super::*;
 
-
-
 impl Debug for FileCommitItem {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let w = &mut f.debug_struct("Commit");
         w.field("time", &self.time);
         w.field("commit_id", &self.id);
         w.field("lines", &self.lines);
-        if let Some(s) = &self.name { w.field("name", s); }
-        if let Some(s) = &self.email { w.field("email", s); }
+        if let Some(s) = &self.name {
+            w.field("name", s);
+        }
+        if let Some(s) = &self.email {
+            w.field("email", s);
+        }
         w.finish()
     }
 }
-
 
 impl From<BlameHunk<'_>> for FileCommitItem {
     fn from(blame: BlameHunk) -> Self {

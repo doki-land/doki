@@ -14,6 +14,4 @@ impl Default for DokiVersionControl {
     }
 }
 
-impl DokiConfig {
-
-}
+impl DokiConfig {}

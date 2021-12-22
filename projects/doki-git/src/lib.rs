@@ -1,5 +1,5 @@
-mod local;
 mod errors;
 mod github;
+mod local;
 
-pub use errors::{Result, GitError, GitErrorKind};
+pub use errors::{GitError, GitErrorKind, Result};
