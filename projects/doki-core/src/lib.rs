@@ -1,6 +1,6 @@
 mod config;
 mod errors;
-mod widgets;
+pub mod pages;
 
 pub use config::{DokiConfig, DokiPath};
 pub use errors::{DokiError, Result};

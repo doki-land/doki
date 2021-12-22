@@ -2,7 +2,11 @@ use super::*;
 
 #[component(DocumentFooter < G >)]
 pub fn builder() -> View<G> {
-    footer().build()
+    let nav = AdjacentPages { prev: Some(("a".to_string(), "b".to_string())), next: Some(("c".to_string(), "d".to_string())) };
+    let nav = Signal::new(nav);
+    footer()
+        .child(DocumentFootJump::create_component(nav.handle()))
+        .build()
 }
 
 // <div class="meta-item edit-time">
@@ -15,7 +19,7 @@ pub fn builder() -> View<G> {
 //     </a>
 // </div>
 
-#[component(DocumentNav < G >)]
+#[component(DocumentFootJump < G >)]
 pub fn builder(pages: ReadSignal<AdjacentPages>) -> View<G> {
     let prev = pages.get().prev.to_owned();
     let next = pages.get().next.to_owned();
