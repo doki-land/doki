@@ -2,6 +2,7 @@
 members = ["projects/*"]
 default-members = [
     "projects/doki-core",
+    "projects/doki-git",
 ]
 exclude = [
     "projects/.DS_Store",

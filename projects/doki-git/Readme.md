@@ -1,0 +1,1 @@
+read git meta info for doki

@@ -1,5 +1,5 @@
 [package]
-name = "doki-core"
+name = "doki-git"
 version = "0.1.0"
 authors = ["Aster <192607617@qq.com>"]
 description = "..."
@@ -9,15 +9,9 @@ license = "MPL-2.0"
 edition = "2018"
 
 [dependencies]
-json5 = "0.4.1"
-serde = {version = "1.0.132", features = ["derive"]}
-
-[dependencies.sycamore]
-version = "0.7.1"
-features = ["experimental-builder-html"]
+git2 = "0.13"
 
 [dev-dependencies]
 
 [features]
-default = ["git"]
-git = []
+default = []
