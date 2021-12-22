@@ -12,6 +12,7 @@ edition = "2018"
 git2 = "0.13"
 chrono = "*"
 project-root ="*"
+url = "*"
 
 [dev-dependencies]
 
