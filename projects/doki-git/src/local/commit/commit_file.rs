@@ -1,9 +1,12 @@
-
+use std::fmt::Pointer;
 use super::*;
 
 impl Debug for FileCommit {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        f.debug_set().entries(self.inner.values()).finish()
+        let w = &mut f.debug_struct("FileCommit");
+        w.field("path", &self.url.path());
+        w.field("commits",&self.inner.values() );
+        w.finish()
     }
 }
 
@@ -32,11 +35,20 @@ impl FileCommit {
             Some(s) => s.lines += item.lines,
         }
     }
-    pub fn new(url: Url, file: Blame) -> Self {
-        let mut record = FileCommit { inner: Default::default() };
+    pub fn new(repo: &Repository, path: &Path) -> Result<Self> {
+        let file = repo.blame_file(Self::relative_path(path, repo.path())?.as_path(), None)?;
+        let mut record = FileCommit { url: Url::from_file_path(&path)?, inner: Default::default() };
         for i in file.iter() {
             record.insert(FileCommitItem::from(i));
         }
-        return record;
+        return Ok(record);
+    }
+
+    fn relative_path(path: &Path, base: &Path)-> Result<PathBuf> {
+        let s = match diff_paths(path, base).map(|s| s.to_path_buf()) {
+            None => {return Err(todo!())}
+            Some(s) => {s.to_string_lossy().trim_start_matches("..\\").replace("\\", "/")}
+        };
+        Ok(PathBuf::from(s))
     }
 }

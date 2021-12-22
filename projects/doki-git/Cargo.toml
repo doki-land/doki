@@ -15,6 +15,7 @@ project-root = "0.2.2"
 url = "2.2.2"
 #  octocrab = "0.15"
 jwalk = "*"
+pathdiff = "*"
 
 [dev-dependencies]
 

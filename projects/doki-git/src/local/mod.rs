@@ -5,12 +5,12 @@ pub use self::{
     commit::{FileCommit, FileCommitItem},
     walk_dir::DirectoryWalker,
 };
-
+use pathdiff::diff_paths;
 use chrono::NaiveDateTime;
-use git2::{Blame, BlameHunk, Oid, Repository};
+use git2::{BlameHunk, Oid, Repository};
 use std::{
     cmp::Ordering,
-    collections::{BTreeMap, HashMap, HashSet},
+    collections::{BTreeMap, HashSet},
     fmt::{Debug, Formatter},
 };
 use jwalk::{DirEntry, WalkDirGeneric};
@@ -21,16 +21,19 @@ use url::Url;
 use crate::Result;
 
 impl DirectoryWalker {
-    pub fn group_repo<P: AsRef<Path>>(&self, root: P) -> Result<BTreeMap<String, FileCommit>> {
-        let mut out = Default::default();
-        let repo = Repository::open(root)?;
-        for (e, files) in self.group_file(&root) {
-
+    pub fn group_repo<P: AsRef<Path>>(&self, root: P) -> Result<BTreeMap<String, Vec<FileCommit>>> {
+        let mut out = BTreeMap::default();
+        let repo = Repository::open(root.as_ref())?;
+        for (e, files) in self.group_file(root.as_ref()) {
+            let mut commits = Vec::with_capacity(files.capacity());
+            for path in files {
+                match FileCommit::new(&repo, &path) {
+                    Ok(o) => { commits.push(o)}
+                    Err(_) => {continue}
+                }
+            }
+            out.insert(e, commits);
         }
-
-
-        let file = repo.blame_file(&Path::new("projects/doki-git/src/lib.rs"), None)?;
-        let record = FileCommit::new(file);
         return Ok(out);
     }
 }
@@ -39,10 +42,14 @@ impl DirectoryWalker {
 #[test]
 fn open() {
     let root = get_project_root().unwrap();
-    let repo = Repository::open(root).unwrap();
-    let file = repo.blame_file(&Path::new("projects/doki-git/src/lib.rs"), None).unwrap();
-    let record = FileCommit::from(file);
-    println!("{:#?}", record)
+    let mut skip = HashSet::new();
+    skip.insert("md".to_string());
+    skip.insert("html".to_string());
+
+    let walker = DirectoryWalker {
+        extension_select: skip
+    };
+    println!("{:#?}", walker.group_repo(root))
 }
 
 #[test]

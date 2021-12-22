@@ -13,7 +13,7 @@ impl DirectoryWalker {
             // children.sort_by(file_sort);
             children.iter_mut().for_each(ignore_dot);
         });
-        let mut grouped = Default::default();
+        let mut grouped = BTreeMap::default();
         for entry in walk_dir {
             let file = match entry {
                 Ok(maybe_file) if maybe_file.file_type.is_file() => maybe_file,
