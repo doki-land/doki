@@ -5,7 +5,7 @@ mod path;
 mod test;
 mod version;
 
-pub use self::{i18n::DokiInternationalization, path::DokiPath, version::DokiVersionControl};
+pub use self::{i18n::DokiLocalization, path::DokiPath, version::DokiVersionControl};
 
 use self::parsing::{is_default, parse_as_lowercase_string, parse_null_as_default, parse_url_base, parse_url_end};
 use serde::{
@@ -34,5 +34,5 @@ pub struct DokiConfig {
     /// [`DokiInternationalization`]
     #[serde(skip_serializing_if = "is_default")]
     #[serde(deserialize_with = "parse_null_as_default", default)]
-    pub i18n: DokiInternationalization,
+    pub i18n: DokiLocalization,
 }

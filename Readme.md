@@ -1,4 +1,9 @@
-Rust Template Project
-=====================
+Doki Documentation Generator
+============================
 
-Rust template project for monorepo
+## Install
+
+```sh
+cargo install doki
+```
+

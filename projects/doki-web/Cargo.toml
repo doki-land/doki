@@ -1,0 +1,22 @@
+[package]
+name = "doki-web"
+version = "0.1.0"
+authors = ["Aster <192607617@qq.com>"]
+description = "..."
+repository = "https://github.com/doki-land/doki"
+readme = "Readme.md"
+license = "MPL-2.0"
+edition = "2018"
+
+[dependencies]
+wasm-logger = "0.2.0"
+log = "0.4.6"
+
+[dependencies.dioxus]
+version = "0.1.7"
+features = ["web", "ssr"]
+
+[dev-dependencies]
+
+[features]
+default = []
