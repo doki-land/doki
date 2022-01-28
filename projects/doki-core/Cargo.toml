@@ -18,11 +18,11 @@ notedown_ast = "0.16.1"
 [dependencies.sycamore]
 version = "0.7.1"
 features = ["experimental-builder-html"]
-option = true
+optional = true
 
 [dependencies.dioxus]
 version = "0.1.7"
-option = true
+optional = true
 
 [dev-dependencies]
 
