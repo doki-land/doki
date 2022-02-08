@@ -2,11 +2,14 @@ use std::collections::HashMap;
 use config::Value;
 use super::*;
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Debug, PartialEq)]
 pub struct DokiVersion {
     pub enable: bool,
+    pub mode: DokiVersionMode,
     pub head: Vec<String>,
 }
+
+
 
 impl Default for DokiVersion {
     fn default() -> Self {

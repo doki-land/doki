@@ -4,6 +4,7 @@ mod path;
 #[cfg(test)]
 mod test;
 mod version;
+mod mode;
 
 pub use self::{languages::DokiLanguages, path::DokiPath, version::DokiVersion};
 
