@@ -1,19 +1,20 @@
-mod i18n;
+mod languages;
 mod parsing;
 mod path;
 #[cfg(test)]
 mod test;
 mod version;
 
-pub use self::{i18n::DokiLocalization, path::DokiPath, version::DokiVersion};
+pub use self::{languages::DokiLanguages, path::DokiPath, version::DokiVersion};
 
-use self::parsing::{is_default, parse_as_lowercase_string, parse_null_as_default, parse_url_base, parse_url_end};
+use self::parsing::*;
 use serde::{
     de,
     de::{value::SeqAccessDeserializer, SeqAccess, Visitor},
     Deserialize, Deserializer, Serialize,
 };
 use std::fmt::{Formatter, Write};
+use config::Value;
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct DokiConfig {
@@ -34,5 +35,5 @@ pub struct DokiConfig {
     /// [`DokiInternationalization`]
     #[serde(skip_serializing_if = "is_default")]
     #[serde(deserialize_with = "parse_null_as_default", default)]
-    pub i18n: DokiLocalization,
+    pub i18n: DokiLanguages,
 }

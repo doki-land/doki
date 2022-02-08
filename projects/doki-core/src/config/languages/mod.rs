@@ -1,20 +1,19 @@
-use std::collections::HashMap;
-use config::Value;
 use super::*;
 
+
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
-pub struct DokiVersion {
-    pub enable: bool,
-    pub head: Vec<String>,
+pub struct DokiLanguages {
+    enable: bool,
+    base: String,
 }
 
-impl Default for DokiVersion {
+impl Default for DokiLanguages {
     fn default() -> Self {
-        Self { enable: false, head: vec![String::from("latest")] }
+        Self { enable: false, base: "en".to_string() }
     }
 }
 
-impl DokiVersion {
+impl DokiLanguages {
     pub fn parse(raw: Value) -> Self {
         let default = Self::default();
         let root = raw.into_table()?;

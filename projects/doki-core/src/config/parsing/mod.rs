@@ -1,4 +1,23 @@
+use std::collections::HashMap;
+use config::Value;
 use super::*;
+
+#[inline]
+pub fn parse_bool(root: &HashMap<String, Value>, key: &str) -> Option<bool> {
+    root.get(key)?.into_bool().ok()
+}
+
+pub fn parse_string_list(root: &HashMap<String, Value>, key: &str) -> Option<Vec<String>> {
+    let head = root.get(key)?;
+    if let Ok(o) = head.into_str() {
+        return Some(vec![o]);
+    }
+    let mut array = vec![];
+    for i in head.clone().into_array()? {
+        array.push(i.into_str()?)
+    }
+    Some(array)
+}
 
 pub fn parse_null_as_default<'de, D, T>(deserializer: D) -> Result<T, D::Error>
 where
