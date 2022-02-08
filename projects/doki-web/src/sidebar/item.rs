@@ -1,12 +1,11 @@
 use super::*;
 
-
 impl SideNavGroupItem {
     #[inline]
     pub fn render(&self) -> LazyNodes {
         match self {
-            Self::Simple(s) => {s.render()}
-            Self::List(s) => {s.render()}
+            Self::Simple(s) => s.render(),
+            Self::List(s) => s.render(),
         }
     }
 }

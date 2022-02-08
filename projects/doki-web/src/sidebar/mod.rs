@@ -1,16 +1,11 @@
 use super::*;
 
-mod item;
 mod data;
+mod item;
 
 pub fn SideNav(cx: Scope) -> Element {
-
-    let a = SideNavGroupItem::Simple {
-        0: SideNavItemSimple::default()
-    };
-    let b =SideNavGroupItem::List {
-        0: SideNavItemList::default()
-    };
+    let a = SideNavGroupItem::Simple { 0: SideNavItemSimple::default() };
+    let b = SideNavGroupItem::List { 0: SideNavItemList::default() };
 
     cx.render(rsx! {
         nav {
@@ -29,7 +24,7 @@ pub fn SideNav(cx: Scope) -> Element {
 }
 
 pub struct SideNav {
-    page: String
+    page: String,
 }
 
 #[derive(Debug, Clone, Props, PartialEq)]
@@ -51,7 +46,7 @@ pub enum SideNavItemIcon {
     Icon(String),
 }
 
-#[derive(Debug, Clone,Props, PartialEq)]
+#[derive(Debug, Clone, Props, PartialEq)]
 pub struct SideNavItemSimple {
     name: String,
     #[props(optional)]
@@ -59,7 +54,7 @@ pub struct SideNavItemSimple {
     link: String,
 }
 
-#[derive(Debug, Clone,Props, PartialEq)]
+#[derive(Debug, Clone, Props, PartialEq)]
 pub struct SideNavItemList {
     button: String,
     #[props(optional)]
@@ -70,7 +65,7 @@ pub struct SideNavItemList {
 }
 
 impl SideNavGroupData {
-    pub fn render_title(& self) -> Option<LazyNodes> {
+    pub fn render_title(&self) -> Option<LazyNodes> {
         self.title.as_ref().map(|title| {
             rsx! {
                 li {

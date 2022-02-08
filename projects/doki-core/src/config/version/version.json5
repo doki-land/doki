@@ -1,0 +1,7 @@
+{
+    enable: true,
+    mode: "",
+    // next, nightly, latest, etc.
+    // head: ["nightly", "beta", "alpha"]
+    head: "next"
+}
