@@ -1,6 +1,5 @@
 use super::*;
 
-
 pub fn Headnav(cx: Scope) -> Element {
     cx.render(rsx! {
         header {

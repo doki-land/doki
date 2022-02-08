@@ -1,18 +1,14 @@
 use super::*;
 
-
-
 pub fn BackToTop(cx: Scope) -> Element {
-    let style = include_str!("style.scss");
+    let style = scss(include_str!("style.scss"));
     cx.render(rsx! {
         button {
             class: "back-to-top",
             title: "Back to Top",
             "Top"
         }
-        style {
-            "{style}"
-        }
+        style {"{style}"}
     })
 }
 

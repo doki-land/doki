@@ -1,15 +1,20 @@
 #![allow(non_snake_case)]
 
+mod article;
 mod navbar;
 mod sidebar;
-mod article;
+mod utils;
 mod widgets;
 
+pub use self::{
+    article::Article,
+    navbar::Headnav,
+    sidebar::SideNav,
+    utils::*,
+    widgets::{BackToTop, FloatNav},
+};
 use dioxus::prelude::*;
-pub use self::navbar::Headnav;
-pub use self::sidebar::SideNav;
-pub use self::article::Article;
-pub use self::widgets::{BackToTop, FloatNav};
+use rsass::compile_scss;
 
 fn main() {
     wasm_logger::init(wasm_logger::Config::default());

@@ -1,9 +1,5 @@
 use super::*;
 
-
-
-
-
 pub fn Article(cx: Scope) -> Element {
     cx.render(rsx! {
         section {
@@ -20,7 +16,6 @@ pub fn Article(cx: Scope) -> Element {
         }
     })
 }
-
 
 pub fn Link(cx: Scope) -> Element {
     cx.render(rsx! {
