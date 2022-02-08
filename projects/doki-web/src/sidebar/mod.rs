@@ -1,63 +1,76 @@
 use super::*;
 
+mod item;
+mod data;
+
 pub fn SideNav(cx: Scope) -> Element {
+
+    let a = SideNavGroupItem::Simple {
+        0: SideNavItemSimple::default()
+    };
+    let b =SideNavGroupItem::List {
+        0: SideNavItemList::default()
+    };
+
     cx.render(rsx! {
         nav {
             class: "bg-white flex flex-col xl:w-64",
             div {
-                // SideNavGroup {
-                //     title: "Title".to_string(),
-                //     items: vec![],
-                // }
+                SideNavGroup {
+                    title: "Title".to_string(),
+                    items: vec![
+                         a,
+                         b
+                    ],
+                }
             }
         }
     })
 }
 
-#[derive(Props, PartialEq)]
+pub struct SideNav {
+    page: String
+}
+
+#[derive(Debug, Clone, Props, PartialEq)]
 pub struct SideNavGroupData {
     #[props(optional)]
     title: Option<String>,
-    items: Vec<String>,
+    items: Vec<SideNavGroupItem>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub enum SideNavGroupItemIcon {
-    Numeric,
+pub enum SideNavGroupItem {
+    Simple(SideNavItemSimple),
+    List(SideNavItemList),
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum SideNavItemIcon {
+    Numeric(Vec<usize>),
     Icon(String),
 }
 
-#[derive(Props, PartialEq)]
-pub struct SideNavGroupItemSimple {
-    #[props(optional)]
-    icon: Option<SideNavGroupItemIcon>,
+#[derive(Debug, Clone,Props, PartialEq)]
+pub struct SideNavItemSimple {
     name: String,
+    #[props(optional)]
+    icon: Option<SideNavItemIcon>,
     link: String,
 }
 
-#[derive(Props, PartialEq)]
-pub struct SideNavGroupItemList {
+#[derive(Debug, Clone,Props, PartialEq)]
+pub struct SideNavItemList {
     button: String,
     #[props(optional)]
     can_close: Option<bool>,
     #[props(optional)]
     start_close: Option<bool>,
-    list: Vec<SideNavGroupItemList>,
-}
-
-pub enum SideNavGroupItem {
-    Simple(SideNavGroupItemSimple),
-    List(SideNavGroupItemList),
-}
-
-impl Default for SideNavGroupData {
-    fn default() -> Self {
-        Self { title: None, items: vec![] }
-    }
+    list: Vec<SideNavItemList>,
 }
 
 impl SideNavGroupData {
-    pub fn render_title<'a>(&'a self) -> Option<LazyNodes<'a, '_>> {
+    pub fn render_title(& self) -> Option<LazyNodes> {
         self.title.as_ref().map(|title| {
             rsx! {
                 li {
@@ -69,75 +82,13 @@ impl SideNavGroupData {
     }
 }
 
-impl SideNavGroupItemSimple {
-    pub fn render(&self) -> LazyNodes {
-        let icon = self.icon.as_ref().map(|icon| icon.render());
-        let text = self.name.as_str();
-        let link = self.link.as_str();
-        rsx! {
-            li {
-                class: "flex flex-row",
-                icon
-                a {
-                    href: "{link}",
-                    "{text}"
-                }
-            }
-        }
-    }
-}
-
-impl SideNavGroupItemIcon {
-    pub fn render(&self) -> LazyNodes {
-        match self {
-            Self::Numeric => {
-                rsx! {
-                    span {
-                        "1."
-                    }
-                }
-            }
-            Self::Icon(_) => {
-                rsx! {
-                    svg {
-                    class: "w-1 h-1",
-                }
-                }
-            }
-        }
-    }
-}
-
 pub fn SideNavGroup(cx: Scope<SideNavGroupData>) -> Element {
     let title = cx.props.render_title();
+    let items = cx.props.items.iter().map(|e| e.render());
     cx.render(rsx! {
         ul {
-                title
-                li {
-                    class: "flex flex-row",
-                    svg {
-                        class: "w-1 h-1",
-                    }
-                    a {
-                        "Text"
-                    }
-                }
-                li {
-                    class: "flex flex-col",
-                    button {
-                        class: "flex flex-row",
-                    svg {
-                        class: "w-1 h-1",
-                    }
-                    "click"
-                    svg {
-                        class: "w-1 h-1",
-                    }
-                    }
-                    ul {
-                        "TExt"
-                    }
-                }
-            }
+            title
+            items
+        }
     })
 }
