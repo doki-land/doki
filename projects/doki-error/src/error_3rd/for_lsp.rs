@@ -1,8 +1,8 @@
-use crate::TailwindError;
+use crate::DokiError;
 use lsp_types::{Diagnostic, DiagnosticTag, Range};
 use yggdrasil_shared::{LspTextAdaptor, TextIndex};
 
-impl TailwindError {
+impl DokiError {
     /// Get the range as [`Range`]
     #[inline]
     pub fn get_lsp_range(&self, text: &TextIndex) -> Option<Range> {

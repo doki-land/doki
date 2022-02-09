@@ -1,10 +1,9 @@
 use super::*;
 
-
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct DokiLanguages {
-    enable: bool,
-    base: String,
+    pub enable: bool,
+    pub base: String,
 }
 
 impl Default for DokiLanguages {
@@ -16,12 +15,14 @@ impl Default for DokiLanguages {
 impl DokiLanguages {
     pub fn parse(raw: Value) -> Self {
         let default = Self::default();
-        let root = raw.into_table()?;
+        let root = match raw.into_table() {
+            Ok(o) => o,
+            Err(_) => {
+                return default;
+            }
+        };
         let enable = parse_bool(&root, "enable").unwrap_or(default.enable);
-        let head = parse_string_list(&root, "head").unwrap_or(default.head);
-        Self {
-            enable,
-            head,
-        }
+        // let head = parse_string_list(&root, "head").unwrap_or(default.head);
+        Self { enable, base: "".to_string() }
     }
 }

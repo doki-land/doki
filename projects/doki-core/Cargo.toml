@@ -11,9 +11,10 @@ edition = "2018"
 [dependencies]
 git = {version = "0.1.0", package = "doki-git", optional = true}
 config = "0.11"
-serde = { version = "1.0.132", features = ["derive"] }
+#serde = { version = "1.0.132", features = ["derive"] }
 json5 = "0.4.1"
 notedown_ast = "0.16.1"
+doki-error = "1.0.0"
 
 [dependencies.sycamore]
 version = "0.7.1"

@@ -1,6 +1,5 @@
-use sycamore::component::Component;
-use sycamore::prelude::*;
 use doki_core::pages::ContentPage;
+use sycamore::{component::Component, prelude::*};
 
 fn main() {
     console_error_panic_hook::set_once();

@@ -2,9 +2,9 @@ use super::*;
 
 macro_rules! error_wrap {
     ($t:ty => $name:ident) => {
-        impl From<$t> for TailwindError {
+        impl From<$t> for DokiError {
             fn from(e: $t) -> Self {
-                Self { kind: Box::new(TailwindErrorKind::$name(e)), level: DiagnosticLevel::None, file: None, range: None }
+                Self { kind: Box::new(DokiErrorKind::$name(e)), level: DiagnosticLevel::None, file: None, range: None }
             }
         }
     };
@@ -18,13 +18,13 @@ error_wrap![
     std::fmt::Error => FormatError,
 ];
 
-impl From<Infallible> for TailwindError {
+impl From<Infallible> for DokiError {
     fn from(_: Infallible) -> Self {
         Self::unreachable()
     }
 }
 
-impl From<()> for TailwindError {
+impl From<()> for DokiError {
     fn from(_: ()) -> Self {
         Self::unreachable()
     }

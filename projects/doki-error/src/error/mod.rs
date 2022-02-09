@@ -9,14 +9,14 @@ use url::Url;
 use yggdrasil_shared::DiagnosticLevel;
 
 /// All result about tailwind
-pub type Result<T> = std::result::Result<T, TailwindError>;
+pub type Result<T> = std::result::Result<T, DokiError>;
 /// Maybe have ast position
 pub type MaybeRanged = Option<Range<usize>>;
 /// Error type for all tailwind operators
 #[derive(Debug)]
-pub struct TailwindError {
+pub struct DokiError {
     /// Actual error kind
-    pub kind: Box<TailwindErrorKind>,
+    pub kind: Box<DokiErrorKind>,
     /// Error level for report
     pub level: DiagnosticLevel,
     /// File name where error occurred
@@ -27,7 +27,7 @@ pub struct TailwindError {
 
 /// Actual error data for the error
 #[derive(Debug)]
-pub enum TailwindErrorKind {
+pub enum DokiErrorKind {
     /// The error type for I/O operations
     IOError(std::io::Error),
     /// The error type which is returned from formatting a message into a
@@ -50,7 +50,7 @@ pub enum TailwindErrorKind {
     // UnknownError(#[from] anyhow::Error),
 }
 
-impl TailwindError {
+impl DokiError {
     /// Set a new url for the error
     #[inline]
     pub fn set_url(&mut self, url: Url) {
@@ -71,18 +71,18 @@ impl TailwindError {
     /// Constructor of [`NoteErrorKind::Unreachable`]
     #[inline]
     pub fn unreachable() -> Self {
-        Self { kind: Box::new(TailwindErrorKind::Unreachable), level: DiagnosticLevel::None, file: None, range: None }
+        Self { kind: Box::new(DokiErrorKind::Unreachable), level: DiagnosticLevel::None, file: None, range: None }
     }
 
     /// Constructor of [`NoteErrorKind::UndefinedVariable`]
     #[inline]
-    pub fn undefined_variable(name: impl Into<String>) -> TailwindError {
-        let kind = TailwindErrorKind::UndefinedVariable { name: name.into() };
+    pub fn undefined_variable(name: impl Into<String>) -> DokiError {
+        let kind = DokiErrorKind::UndefinedVariable { name: name.into() };
         Self { kind: Box::new(kind), level: DiagnosticLevel::None, file: None, range: None }
     }
 }
 
-impl TailwindError {
+impl DokiError {
     /// Deprecated or obsolete code.
     /// Clients are allowed to rendered diagnostics with this tag strike
     /// through.
@@ -100,13 +100,13 @@ impl TailwindError {
 macro_rules! error_msg {
     ($name:ident => $t:ident) => {
         /// Constructor of [`NoteErrorKind::$t`]
-        pub fn $name(msg: impl Into<String>) -> TailwindError {
-            let kind = TailwindErrorKind::$t(msg.into());
+        pub fn $name(msg: impl Into<String>) -> DokiError {
+            let kind = DokiErrorKind::$t(msg.into());
             Self { kind: Box::new(kind), level: DiagnosticLevel::None, file: None, range: None }
         }
     };
     ($($name:ident => $t:ident),+ $(,)?) => (
-        impl TailwindError { $(error_msg!($name=>$t);)+ }
+        impl DokiError { $(error_msg!($name=>$t);)+ }
     );
 }
 
@@ -116,9 +116,9 @@ error_msg![
     runtime_error => RuntimeError,
 ];
 
-impl Error for TailwindError {}
+impl Error for DokiError {}
 
-impl Display for TailwindError {
+impl Display for DokiError {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let path = match &self.file {
             Some(s) => s.path(),
@@ -132,7 +132,7 @@ impl Display for TailwindError {
     }
 }
 
-impl Display for TailwindErrorKind {
+impl Display for DokiErrorKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
             Self::IOError(e) => {
