@@ -13,6 +13,12 @@ impl Default for SidebarGroup {
     }
 }
 
+impl Default for SidebarGroupItemKind {
+    fn default() -> Self {
+        Self::Simple(Default::default())
+    }
+}
+
 impl Default for SidebarItem {
     fn default() -> Self {
         Self { icon: None, name: String::new(), link: String::new() }

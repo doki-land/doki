@@ -1,5 +1,5 @@
 mod display;
-mod methods;
+mod parser;
 
 use super::*;
 use doki_error::{DokiError, Result, Url};
@@ -67,22 +67,6 @@ pub enum SidebarItemIcon {
 }
 
 impl DokiSidebar {
-    pub fn parse(raw: Value) -> Self {
-        let default = Self::default();
-        let root = match raw.into_table() {
-            Ok(o) => o,
-            Err(_) => return default,
-        };
-        let enable = parse_bool(&root, "enable").unwrap_or(default.enable);
-        let section = parse_string(&root, "section").unwrap_or(default.section);
-        let url = Self::parse_url(&root);
-        Self { enable, section, url, items: vec![] }
-    }
-
-    #[inline]
-    fn parse_url(root: &HashMap<String, Value>) -> Option<String> {
-        root.get("url")?.clone().into_string().ok()
-    }
     /// get current segment of url
     pub fn get_url_segment(&self) -> String {
         let url = self.url.as_ref().unwrap_or(&self.section);
