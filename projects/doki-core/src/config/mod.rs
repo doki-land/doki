@@ -9,7 +9,11 @@ mod version;
 
 pub use self::{languages::DokiLanguages, path::DokiPath, sidebar::DokiSidebar, version::DokiVersion};
 use self::{mode::DokiUrlMode, parsing::*};
-use config::{Config, File, FileFormat, Map, Value};
+
+#[cfg(feature = "non-wasm")]
+use {
+    config::{Config, File, FileFormat, Map, Value}
+};
 use doki_error::{DokiError, Result, Url};
 use std::{collections::HashMap, fmt::Write};
 

@@ -1,4 +1,5 @@
 mod display;
+#[cfg(feature = "non-wasm")]
 mod parser;
 
 use super::*;

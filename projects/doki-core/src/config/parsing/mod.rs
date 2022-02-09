@@ -4,25 +4,29 @@ use log::warn;
 use std::{fs, fs::canonicalize, path::Path};
 
 #[inline]
+#[cfg(feature = "non-wasm")]
 pub fn parse_bool(root: &HashMap<String, Value>, key: &str) -> Option<bool> {
     get_normalized_object(root, key)?.clone().into_bool().ok()
 }
 
 #[inline]
+#[cfg(feature = "non-wasm")]
 pub fn parse_string(root: &HashMap<String, Value>, key: &str) -> Option<String> {
     get_normalized_object(root, key)?.clone().into_string().ok()
 }
 
 #[inline]
+#[cfg(feature = "non-wasm")]
 pub fn parse_object(root: &HashMap<String, Value>, key: &str) -> Option<HashMap<String, Value>> {
     get_normalized_object(root, key)?.clone().into_table().ok()
 }
 
-#[inline]
+
+#[inline]#[cfg(feature = "non-wasm")]
 pub fn parse_array(root: &HashMap<String, Value>, key: &str) -> Option<Vec<Value>> {
     get_normalized_object(root, key)?.clone().into_array().ok()
 }
-
+#[cfg(feature = "non-wasm")]
 pub fn parse_string_list(root: &HashMap<String, Value>, key: &str) -> Option<Vec<String>> {
     let head = get_normalized_object(root, key)?;
     if let Ok(o) = head.clone().into_string() {
@@ -34,7 +38,7 @@ pub fn parse_string_list(root: &HashMap<String, Value>, key: &str) -> Option<Vec
     }
     Some(array)
 }
-
+#[cfg(feature = "non-wasm")]
 fn get_normalized_object<'a>(root: &'a HashMap<String, Value>, key: &str) -> Option<&'a Value> {
     if key.chars().all(|c| c.is_ascii_alphanumeric()) {
         return root.get(key);
@@ -55,11 +59,11 @@ pub fn normalized_string(key: &str) -> String {
     }
     normalized
 }
-
+#[cfg(feature = "non-wasm")]
 pub fn load_config_string(input: &str, format: FileFormat) -> Config {
     Config::builder().add_source(File::from_str(input, format)).build().unwrap()
 }
-
+#[cfg(feature = "non-wasm")]
 pub fn load_config_file(dir: &Path, name: &str) -> Result<Value> {
     let mut config = Config::builder();
     let mut loaded: usize = 0;

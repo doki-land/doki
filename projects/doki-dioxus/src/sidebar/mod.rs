@@ -11,25 +11,9 @@ pub struct SideNavData {
     data: DokiSidebar
 }
 
-impl Default for SideNavData {
-    fn default() -> Self {
-        Self {
-            data: Default::default()
-        }
-    }
-}
-
-
 pub fn SideNav(cx: Scope<SideNavData>) -> Element {
-    let data = cx.props.data.build_node();
-
-    cx.render(rsx!{
-        data
-    })
+    cx.render(cx.props.data.build_node())
 }
-
-
-
 
 impl DioxusRender for DokiSidebar {
     fn build_node(&self) -> LazyNodes {
