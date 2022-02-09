@@ -1,11 +1,12 @@
 use std::collections::HashMap;
 use config::Value;
+use crate::config::mode::DokiUrlMode;
 use super::*;
 
 #[derive(Debug, PartialEq)]
 pub struct DokiVersion {
     pub enable: bool,
-    pub mode: DokiVersionMode,
+    pub mode: DokiUrlMode,
     pub head: Vec<String>,
 }
 
