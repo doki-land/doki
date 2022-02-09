@@ -1,7 +1,4 @@
 use super::*;
-use crate::config::mode::DokiUrlMode;
-use config::Value;
-use std::collections::HashMap;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct DokiVersion {
@@ -28,4 +25,10 @@ impl DokiVersion {
         let mode = DokiUrlMode::parse(&root, "mode").unwrap_or_default();
         Self { enable, mode, head }
     }
+}
+
+#[test]
+fn test_version() {
+    let cfg = load_config_string(include_str!("version.json5"), FileFormat::Json5);
+    println!("{:#?}", DokiVersion::parse(cfg.cache));
 }

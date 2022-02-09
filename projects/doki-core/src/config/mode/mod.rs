@@ -1,5 +1,5 @@
 use super::*;
-use std::{collections::HashMap, str::FromStr};
+
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum DokiUrlMode {

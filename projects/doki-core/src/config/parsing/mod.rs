@@ -1,6 +1,5 @@
+use config::{Config, File};
 use super::*;
-use config::Value;
-use std::collections::HashMap;
 
 #[inline]
 pub fn parse_bool(root: &HashMap<String, Value>, key: &str) -> Option<bool> {
@@ -9,7 +8,7 @@ pub fn parse_bool(root: &HashMap<String, Value>, key: &str) -> Option<bool> {
 
 #[inline]
 pub fn parse_string(root: &HashMap<String, Value>, key: &str) -> Option<String> {
-    get_normalized_object(root, key)?.clone().into_str().ok()
+    get_normalized_object(root, key)?.clone().into_string().ok()
 }
 
 #[inline]
@@ -24,12 +23,12 @@ pub fn parse_array(root: &HashMap<String, Value>, key: &str) -> Option<Vec<Value
 
 pub fn parse_string_list(root: &HashMap<String, Value>, key: &str) -> Option<Vec<String>> {
     let head = get_normalized_object(root, key)?;
-    if let Ok(o) = head.clone().into_str() {
+    if let Ok(o) = head.clone().into_string() {
         return Some(vec![o]);
     }
     let mut array = vec![];
     for i in head.clone().into_array().ok()? {
-        array.push(i.into_str().ok()?)
+        array.push(i.into_string().ok()?)
     }
     Some(array)
 }
@@ -52,3 +51,9 @@ pub fn normalized_string(key: &str) -> String {
     normalized
 }
 
+pub fn load_config_string(input: &str, format: FileFormat) -> Config {
+    Config::builder()
+        .add_source(File::from_str(input, format))
+        .build()
+        .unwrap()
+}
