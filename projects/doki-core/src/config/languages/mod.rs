@@ -8,7 +8,7 @@ pub struct DokiLanguages {
 
 impl Default for DokiLanguages {
     fn default() -> Self {
-        Self { enable: false, base: "en".to_string() }
+        Self { enable: true, base: "en".to_string() }
     }
 }
 
@@ -22,7 +22,14 @@ impl DokiLanguages {
             }
         };
         let enable = parse_bool(&root, "enable").unwrap_or(default.enable);
-        // let head = parse_string_list(&root, "head").unwrap_or(default.head);
-        Self { enable, base: "".to_string() }
+        let base = parse_string(&root, "base").unwrap_or(default.base);
+        Self { enable, base }
     }
+}
+
+
+#[test]
+fn test_language() {
+    let cfg = load_config_string(include_str!("language.json5"), FileFormat::Json5);
+    println!("{:#?}", DokiLanguages::parse(cfg.cache));
 }

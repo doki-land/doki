@@ -1,0 +1,31 @@
+{
+    section: "id",
+    url: "",
+    items: [
+        {
+            group: "Test",
+            items: [
+                {
+                    name: "simple",
+                    icon: "",
+                    // relative path
+                    path: "",
+                    url: "",
+                },
+                {
+                    list: "a",
+                    icon: "",
+                    can_close: true,
+                    start_close: false,
+                    items: [
+                        {
+                            name: "",
+                            icon: "",
+                            path: ""
+                        }
+                    ],
+                }
+            ]
+        }
+    ],
+}
