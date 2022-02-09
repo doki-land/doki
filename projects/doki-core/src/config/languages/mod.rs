@@ -28,7 +28,10 @@ impl DokiLanguages {
     }
     pub fn write_url(&self, url: &mut Url, path: &str) -> Result<()> {
         match self.mode {
-            DokiUrlMode::HtmlData => {}
+            DokiUrlMode::HtmlData => {
+                // do nothing
+                return Err(DokiError::runtime_error("unimplemented!"));
+            }
             DokiUrlMode::UrlPath => *url = url.join(path)?,
             DokiUrlMode::UrlParameter { short } => {
                 match short {

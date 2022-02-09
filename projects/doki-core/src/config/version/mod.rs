@@ -1,11 +1,12 @@
 use super::*;
 use doki_error::DokiError;
-use log::error;
+use fs::read_dir;
+use log::{error, info};
 use semver::Version;
 use std::{
     collections::BTreeMap,
     fs,
-    fs::DirEntry,
+    fs::{DirEntry},
     path::{Path, PathBuf},
 };
 
@@ -14,11 +15,13 @@ pub struct DokiVersion {
     pub enable: bool,
     pub mode: DokiUrlMode,
     pub head: Vec<String>,
+    /// runtime only
+    pub versions: Vec<(String, PathBuf)>,
 }
 
 impl Default for DokiVersion {
     fn default() -> Self {
-        Self { enable: false, mode: Default::default(), head: vec![String::from("latest")] }
+        Self { enable: false, mode: Default::default(), head: vec![String::from("latest")], versions: vec![] }
     }
 }
 
@@ -32,7 +35,7 @@ impl DokiVersion {
         let enable = parse_bool(&root, "enable").unwrap_or(default.enable);
         let head = parse_string_list(&root, "head").unwrap_or(default.head);
         let mode = DokiUrlMode::parse(&root, "mode").unwrap_or_default();
-        Self { enable, mode, head }
+        Self { enable, mode, head, ..Self::default() }
     }
 
     pub fn write_url(&self, url: &mut Url, path: &str) -> Result<()> {
@@ -50,22 +53,21 @@ impl DokiVersion {
         Ok(())
     }
 
-    fn load_directories(&self, dir: &Path) -> Result<Vec<(String, PathBuf)>> {
-        let mut out = vec![];
+    fn load_directories(&mut self, dir: &Path) -> Result<()> {
+        let dir_debug = absolute_path(dir);
         let mut vs = BTreeMap::default();
 
         for file in &self.head {
             let path = dir.join(&file);
             if path.exists() {
-                out.push((file.to_owned(), path))
+                self.versions.push((file.to_owned(), path))
             }
             else {
-                // need color
-                error!("Version `{}` not found!", file)
+                error!("Version `{file}` not found in `{dir}`, `{file}` will be ignored.", file = file, dir = dir_debug)
             }
         }
 
-        for file in fs::read_dir(dir)? {
+        for file in read_dir(dir)? {
             let dir = match path_from_dir_result(file) {
                 Some(s) => s,
                 None => continue,
@@ -77,15 +79,18 @@ impl DokiVersion {
                 None => continue,
             }
         }
-        out.extend(vs.into_iter().map(|f| f.1));
-        Ok(out)
+        self.versions.extend(vs.into_iter().map(|f| f.1).rev());
+        if self.versions.is_empty() {
+            info!("`{dir}` does not found any valid version directory.", dir = dir_debug)
+        }
+        Ok(())
     }
 }
 
-pub fn load_version(dir: &Path) -> Result<(DokiVersion, Vec<(String, PathBuf)>)> {
-    let config = DokiVersion::parse(load_config_file(dir, "version")?);
-    let rest = config.load_directories(dir)?;
-    Ok((config, rest))
+pub fn load_version(dir: &Path) -> Result<DokiVersion> {
+    let mut config = DokiVersion::parse(load_config_file(dir, "version")?);
+    config.load_directories(dir)?;
+    Ok(config)
 }
 
 fn path_from_dir_result(res: std::io::Result<DirEntry>) -> Option<PathBuf> {
@@ -131,5 +136,5 @@ fn test_version() {
 #[test]
 fn test_version_load() {
     env_logger::init();
-    println!("{:#?}", load_version(&PathBuf::from(".")))
+    println!("{:#?}", load_version(&PathBuf::from("../doki-docs/posts/zh-hans")))
 }

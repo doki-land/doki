@@ -1,5 +1,5 @@
 [package]
-name = "doki-web"
+name = "doki-dioxus"
 version = "0.1.0"
 authors = ["Aster <192607617@qq.com>"]
 description = "..."
@@ -14,6 +14,10 @@ log = "0.4.6"
 rsass = "0.23.4"
 parking_lot = { version = "0.11.1", features = ["wasm-bindgen"]}
 config = "0.11.0"
+
+[dependencies.doki-core]
+version = "0.1.*"
+path = "../doki-core"
 
 [dependencies.dioxus]
 version = "0.1.7"

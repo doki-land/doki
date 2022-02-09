@@ -1,17 +1,34 @@
 use super::*;
 
-impl SideNavGroupItem {
-    #[inline]
-    pub fn render(&self) -> LazyNodes {
+impl DioxusRender for SidebarGroupItemKind {
+    fn build_node(&self) -> LazyNodes {
         match self {
-            Self::Simple(s) => s.render(),
-            Self::List(s) => s.render(),
+            Self::Simple(s) => s.build_node(),
+            Self::List(s) => s.build_node(),
         }
     }
 }
 
-impl SideNavItemIcon {
-    pub fn render(&self) -> LazyNodes {
+impl DioxusRender for SidebarItem {
+    fn build_node(&self) -> LazyNodes {
+        let icon = self.icon.as_ref().map(|icon| icon.build_node());
+        let text = self.name.as_str();
+        let link = self.link.as_str();
+        rsx! {
+            li {
+                class: "flex flex-row",
+                icon
+                a {
+                    href: "{link}",
+                    "{text}"
+                }
+            }
+        }
+    }
+}
+
+impl DioxusRender for SidebarItemIcon {
+    fn build_node(&self) -> LazyNodes {
         match self {
             Self::Numeric(_) => {
                 rsx! {
@@ -31,27 +48,9 @@ impl SideNavItemIcon {
     }
 }
 
-impl SideNavItemSimple {
-    pub fn render(&self) -> LazyNodes {
-        let icon = self.icon.as_ref().map(|icon| icon.render());
-        let text = self.name.as_str();
-        let link = self.link.as_str();
-        rsx! {
-            li {
-                class: "flex flex-row",
-                icon
-                a {
-                    href: "{link}",
-                    "{text}"
-                }
-            }
-        }
-    }
-}
-
-impl SideNavItemList {
-    pub fn render(&self) -> LazyNodes {
-        let text = self.button.as_str();
+impl DioxusRender for SidebarList {
+    fn build_node(&self) -> LazyNodes {
+        let text = self.title.as_str();
         rsx! {
             button {
                 "{text}"

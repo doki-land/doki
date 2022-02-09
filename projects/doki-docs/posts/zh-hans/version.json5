@@ -1,4 +1,14 @@
 {
-    // next, nightly, etc.
-    latest: "next"
+    /// disable then only head version got generated
+    enable: true,
+    /// url
+    /// - `data-version="v1.0.0"`
+    /// - `?version=xxx`
+    /// - `/version/`
+    mode: "url-path",
+    /// next, nightly, latest, etc.
+    /// can be multiple head, like `["nightly", "beta", "alpha"]`
+    head: "next",
+    /// excluded versions
+    excludes: []
 }

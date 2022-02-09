@@ -1,7 +1,7 @@
 use super::*;
 use fs::read_to_string;
 use log::warn;
-use std::{fs, path::Path};
+use std::{fs, fs::canonicalize, path::Path};
 
 #[inline]
 pub fn parse_bool(root: &HashMap<String, Value>, key: &str) -> Option<bool> {
@@ -62,7 +62,7 @@ pub fn load_config_string(input: &str, format: FileFormat) -> Config {
 
 pub fn load_config_file(dir: &Path, name: &str) -> Result<Value> {
     let mut config = Config::builder();
-    let mut loaded = 0;
+    let mut loaded: usize = 0;
 
     let yaml = dir.join(format!("{}.yaml", name));
     if let Ok(o) = read_to_string(yaml) {
@@ -73,21 +73,31 @@ pub fn load_config_file(dir: &Path, name: &str) -> Result<Value> {
     let toml = dir.join(format!("{}.toml", name));
     if let Ok(o) = read_to_string(toml) {
         config = config.add_source(File::from_str(&o, FileFormat::Toml));
+        loaded += 1
     }
 
     let json = dir.join(format!("{}.json", name));
     if let Ok(o) = read_to_string(json) {
         config = config.add_source(File::from_str(&o, FileFormat::Json));
+        loaded += 1
     }
 
     let json5 = dir.join(format!("{}.json5", name));
-    match read_to_string(json5) {
-        Ok(o) => config = config.add_source(File::from_str(&o, FileFormat::Json5)),
-        Err(..) => {
-            warn!("The configuration about {name} was not found in {dir:?},", name = name, dir = dir);
-            warn!("which means {dir:?} may not be a valid directory.", dir = dir);
-        }
+    if let Ok(o) = read_to_string(json5) {
+        config = config.add_source(File::from_str(&o, FileFormat::Json5));
+        loaded += 1
+    }
+    if loaded == 0 {
+        warn!(
+            "The configuration about `{name}` was not found in `{dir}`, which means this may not be a valid directory.",
+            name = name,
+            dir = absolute_path(dir)
+        );
     }
     // FIXME: unwrap
     Ok(config.build().unwrap().cache)
+}
+
+pub fn absolute_path(dir: &Path) -> String {
+    canonicalize(dir).unwrap_or_default().to_string_lossy().trim_start_matches("\\\\?\\").to_string()
 }

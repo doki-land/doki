@@ -2,12 +2,12 @@ mod languages;
 mod mode;
 mod parsing;
 mod path;
-mod sidebar;
+pub mod sidebar;
 #[cfg(test)]
 mod test;
 mod version;
 
-pub use self::{languages::DokiLanguages, path::DokiPath, version::DokiVersion};
+pub use self::{languages::DokiLanguages, path::DokiPath, sidebar::DokiSidebar, version::DokiVersion};
 use self::{mode::DokiUrlMode, parsing::*};
 use config::{Config, File, FileFormat, Map, Value};
 use doki_error::{DokiError, Result, Url};

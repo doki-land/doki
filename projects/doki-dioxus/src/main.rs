@@ -15,10 +15,16 @@ pub use self::{
 };
 use dioxus::prelude::*;
 use rsass::compile_scss;
+use doki_core::DokiSidebar;
+use crate::sidebar::SideNavData;
 
 fn main() {
     wasm_logger::init(wasm_logger::Config::default());
     dioxus::web::launch(AppWeb)
+}
+
+pub trait DioxusRender {
+    fn build_node(&self) -> LazyNodes;
 }
 
 pub fn main_ssr() {
@@ -28,6 +34,8 @@ pub fn main_ssr() {
 }
 
 pub fn AppWeb(cx: Scope) -> Element {
+
+    let side_nav = DokiSidebar::default();
     cx.render(rsx! {
         Headnav {
 
@@ -35,7 +43,7 @@ pub fn AppWeb(cx: Scope) -> Element {
         main {
             class: "flex flex-row",
             SideNav {
-
+                data: side_nav,
             }
             Article {
 
