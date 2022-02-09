@@ -1,5 +1,4 @@
 use super::*;
-use std::fmt::{Debug, Formatter};
 
 impl Default for DokiSidebar {
     fn default() -> Self {
@@ -21,14 +20,14 @@ impl Default for SidebarGroupItemKind {
 
 impl Default for SidebarItem {
     fn default() -> Self {
-        Self { icon: None, name: String::new(), link: String::new() }
+        Self { icon: None, name: "Test Item".to_string(), link: String::new() }
     }
 }
 
 impl Default for SidebarList {
     fn default() -> Self {
         Self {
-            title: String::new(),
+            title: "Test List".to_string(),
             path: "".to_string(),
             url: "".to_string(),
             icon: None,

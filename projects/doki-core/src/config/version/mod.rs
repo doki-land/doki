@@ -1,5 +1,13 @@
 use super::*;
 use doki_error::DokiError;
+use log::warn;
+use semver::Version;
+use std::{
+    collections::BTreeMap,
+    fs,
+    fs::{DirEntry, ReadDir},
+    path::{Path, PathBuf},
+};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct DokiVersion {
@@ -41,6 +49,66 @@ impl DokiVersion {
         }
         Ok(())
     }
+    pub fn load_directories(&self, dir: &Path) -> Result<Vec<(String, PathBuf)>> {
+        let mut out = vec![];
+        let mut vs = BTreeMap::default();
+
+        for file in &self.head {
+            let path = dir.join(&file);
+            out.push((file.to_owned(), path))
+        }
+        for file in fs::read_dir(dir)? {
+            let dir = match path_from_dir_result(file) {
+                Some(s) => s,
+                None => continue,
+            };
+            match parse_version_from_path(&dir) {
+                Some(s) => {
+                    vs.insert(s.0, (s.1, dir));
+                }
+                None => {
+                    warn!("xx is not semver");
+                    continue;
+                }
+            }
+        }
+        out.extend(vs.into_iter().map(|f| f.1));
+        Ok(out)
+    }
+}
+
+fn path_from_dir_result(res: std::io::Result<DirEntry>) -> Option<PathBuf> {
+    let path = res.ok()?.path();
+    if path.is_dir() {
+        Some(path)
+    }
+    else {
+        // warn!("xx is not dir");
+        None
+    }
+}
+
+fn parse_version_from_path(dir: &Path) -> Option<(Version, String)> {
+    let name = dir.file_name()?.to_str()?;
+    let mut collecting = false;
+    let mut trimmed = String::new();
+    for c in name.chars() {
+        if collecting {
+            trimmed.push(c)
+        }
+        else if c.is_numeric() {
+            collecting = true;
+            trimmed.push(c);
+        }
+        else {
+            continue;
+        }
+    }
+    if trimmed.is_empty() {
+        return None;
+    }
+    let v = Version::parse(&trimmed).ok()?;
+    Some((v, name.to_owned()))
 }
 
 #[test]

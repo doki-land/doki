@@ -8,7 +8,7 @@ mod test;
 mod version;
 pub use self::{languages::DokiLanguages, path::DokiPath, version::DokiVersion};
 use self::{mode::DokiUrlMode, parsing::*};
-use config::{FileFormat, Value};
+use config::{FileFormat, Map, Value};
 use doki_error::{DokiError, Result, Url};
 use std::{collections::HashMap, fmt::Write};
 
@@ -25,3 +25,5 @@ pub struct DokiConfig {
     /// [`DokiInternationalization`]
     pub i18n: DokiLanguages,
 }
+
+pub struct DokiDatabase {}

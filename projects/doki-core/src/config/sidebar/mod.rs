@@ -2,7 +2,6 @@ mod display;
 mod parser;
 
 use super::*;
-use doki_error::{DokiError, Result, Url};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct DokiSidebar {
