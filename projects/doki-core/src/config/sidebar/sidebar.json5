@@ -1,6 +1,5 @@
 {
     section: "id",
-    url: "",
     items: [
         {
             group: "Test",

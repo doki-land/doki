@@ -34,6 +34,9 @@ pub fn parse_string_list(root: &HashMap<String, Value>, key: &str) -> Option<Vec
 }
 
 fn get_normalized_object<'a>(root: &'a HashMap<String, Value>, key: &str) -> Option<&'a Value> {
+    if key.chars().all(|c| c.is_ascii_alphanumeric()) {
+        return root.get(key);
+    }
     let target = normalized_string(key);
     for (key, v) in root {
         if normalized_string(key) == target {
