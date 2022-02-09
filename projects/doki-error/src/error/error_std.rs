@@ -29,3 +29,9 @@ impl From<()> for DokiError {
         Self::unreachable()
     }
 }
+
+impl From<ParseError> for DokiError {
+    fn from(e: ParseError) -> Self {
+        Self::syntax_error(e.to_string())
+    }
+}

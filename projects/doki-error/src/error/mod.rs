@@ -5,7 +5,7 @@ use std::{
     fmt::{self, Debug, Display, Formatter},
     ops::Range,
 };
-use url::Url;
+use url::{ParseError, Url};
 use yggdrasil_shared::DiagnosticLevel;
 
 /// All result about tailwind

@@ -1,4 +1,5 @@
 use super::*;
+use doki_error::DokiError;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct DokiVersion {
@@ -24,6 +25,21 @@ impl DokiVersion {
         let head = parse_string_list(&root, "head").unwrap_or(default.head);
         let mode = DokiUrlMode::parse(&root, "mode").unwrap_or_default();
         Self { enable, mode, head }
+    }
+
+    pub fn write_url(&self, url: &mut Url, path: &str) -> Result<()> {
+        match self.mode {
+            DokiUrlMode::HtmlData => {}
+            DokiUrlMode::UrlPath => *url = url.join(path)?,
+            DokiUrlMode::UrlParameter { short } => {
+                match short {
+                    true => url.query_pairs_mut().append_pair("v", path),
+                    false => url.query_pairs_mut().append_pair("version", path),
+                };
+            }
+            DokiUrlMode::SubDomain => return Err(DokiError::runtime_error("Can not set sub domain for version!")),
+        }
+        Ok(())
     }
 }
 

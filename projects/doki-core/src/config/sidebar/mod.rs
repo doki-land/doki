@@ -1,62 +1,72 @@
-use super::*;
+mod display;
+mod methods;
 
+use super::*;
+use doki_error::{DokiError, Result, Url};
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct DokiSidebar {
+    /// show this sidebar or not
     pub enable: bool,
     /// section name of page sidebar
     pub section: String,
-    pub items: Vec<SidebarGroup>
-}
-
-impl Default for DokiSidebar {
-    fn default() -> Self {
-        Self {
-            enable: true,
-            section: String::new(),
-            items: vec![]
-        }
-    }
+    /// set specialized url segment
+    ///
+    /// use [`DokiSidebar::section`] if missing
+    url: Option<String>,
+    /// groups in this sidebar
+    pub items: Vec<SidebarGroup>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct SidebarGroup {
-    title: Option<String>,
-    items: Vec<SideNavGroupItem>,
+    /// title of the sidebar group
+    pub title: Option<String>,
+    pub items: Vec<SidebarGroupItemKind>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub enum SideNavGroupItem {
-    Simple(SideNavItemSimple),
-    List(SideNavItemList),
+pub enum SidebarGroupItemKind {
+    /// A sidebar item
+    Simple(SidebarItem),
+    /// a sidebar list
+    List(SidebarList),
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub enum SideNavItemIcon {
+pub struct SidebarItem {
+    /// title of the item
+    pub name: String,
+    /// icon of the item
+    pub icon: Option<SidebarItemIcon>,
+    pub link: String,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct SidebarList {
+    /// title of list
+    pub title: String,
+    /// unix path
+    pub path: String,
+
+    url: String,
+    /// icon of the list
+    pub icon: Option<SidebarItemIcon>,
+    /// This tab can be collapsed
+    pub foldable: bool,
+    ///
+    pub folded: bool,
+    /// items of the list
+    pub items: Vec<SidebarItem>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum SidebarItemIcon {
     Numeric(Vec<usize>),
     Icon(String),
 }
 
-#[derive(Debug, Clone, PartialEq)]
-pub struct SideNavItemSimple {
-    name: String,
-    icon: Option<SideNavItemIcon>,
-    link: String,
-}
-
-#[derive(Debug, Clone, PartialEq)]
-pub struct SideNavItemList {
-    button: String,
-    can_close: Option<bool>,
-    start_close: Option<bool>,
-    list: Vec<SideNavItemList>,
-}
-
-impl Default for DokiVersion {
-    fn default() -> Self {
-        Self { enable: false, mode: Default::default(), head: vec![String::from("latest")] }
-    }
-}
-
-impl DokiVersion {
+impl DokiSidebar {
     pub fn parse(raw: Value) -> Self {
         let default = Self::default();
         let root = match raw.into_table() {
@@ -64,14 +74,28 @@ impl DokiVersion {
             Err(_) => return default,
         };
         let enable = parse_bool(&root, "enable").unwrap_or(default.enable);
-        let head = parse_string_list(&root, "head").unwrap_or(default.head);
-        let mode = DokiUrlMode::parse(&root, "mode").unwrap_or_default();
-        Self { enable, mode, head }
+        let section = parse_string(&root, "section").unwrap_or(default.section);
+        let url = Self::parse_url(&root);
+        Self { enable, section, url, items: vec![] }
+    }
+
+    #[inline]
+    fn parse_url(root: &HashMap<String, Value>) -> Option<String> {
+        root.get("url")?.clone().into_string().ok()
+    }
+    /// get current segment of url
+    pub fn get_url_segment(&self) -> String {
+        let url = self.url.as_ref().unwrap_or(&self.section);
+        normalized_string(url)
+    }
+    pub fn write_url(&self, url: &mut Url) -> Result<()> {
+        *url = url.join(&self.get_url_segment())?;
+        Ok(())
     }
 }
 
 #[test]
 fn test_sidebar() {
-    let cfg = load_config_string(include_str!("version.json5"), FileFormat::Json5);
-    println!("{:#?}", DokiVersion::parse(cfg.cache));
+    let cfg = load_config_string(include_str!("sidebar.json5"), FileFormat::Json5);
+    println!("{:#?}", DokiSidebar::parse(cfg.cache));
 }

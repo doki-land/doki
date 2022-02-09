@@ -12,9 +12,8 @@ edition = "2018"
 git = {version = "0.1.0", package = "doki-git", optional = true}
 config = { version = "0.11", git = "https://github.com/mehcode/config-rs.git" }
 #serde = { version = "1.0.132", features = ["derive"] }
-json5 = "0.4.1"
 notedown_ast = "0.16.1"
-doki-error = "1.0.0"
+doki-error = "1.0.1"
 
 [dependencies.sycamore]
 version = "0.7.1"

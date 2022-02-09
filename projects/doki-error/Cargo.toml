@@ -1,8 +1,8 @@
 [package]
 name = "doki-error"
-version = "1.0.0"
+version = "1.0.1"
 authors = ["Aster <192607617@qq.com>"]
-description = "Tailwind Error Handlers"
+description = "Doki Error Handler Adaptors"
 repository = "https://github.com/doki-land/doki"
 documentation = "https://docs.rs/doki-error"
 categories = []
