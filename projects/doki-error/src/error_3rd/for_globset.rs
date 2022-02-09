@@ -1,8 +1,8 @@
-use crate::TailwindError;
+use crate::DokiError;
 use globset::Error;
 
-impl From<Error> for TailwindError {
+impl From<Error> for DokiError {
     fn from(e: Error) -> Self {
-        TailwindError::runtime_error(e.to_string())
+        DokiError::runtime_error(e.to_string())
     }
 }

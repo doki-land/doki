@@ -1,11 +1,11 @@
-use crate::{DiagnosticLevel, TailwindError, TailwindErrorKind};
+use crate::{DiagnosticLevel, DokiError, DokiErrorKind};
 use html_parser::Error;
 
-impl From<Error> for TailwindError {
+impl From<Error> for DokiError {
     fn from(e: Error) -> Self {
         let kind = match e {
-            Error::Parsing(e) => TailwindErrorKind::SyntaxError(e),
-            Error::IO(e) => TailwindErrorKind::IOError(e),
+            Error::Parsing(e) => DokiErrorKind::SyntaxError(e),
+            Error::IO(e) => DokiErrorKind::IOError(e),
             Error::Cli(_) => {
                 unimplemented!()
             }

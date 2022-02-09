@@ -1,6 +1,6 @@
-use std::collections::HashSet;
-use project_root::get_project_root;
 use doki_git::local::DirectoryWalker;
+use project_root::get_project_root;
+use std::collections::HashSet;
 
 #[test]
 fn ready() {

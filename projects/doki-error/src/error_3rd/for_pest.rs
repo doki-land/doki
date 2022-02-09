@@ -1,8 +1,8 @@
-use crate::TailwindError;
+use crate::DokiError;
 use pest::error::{Error, ErrorVariant};
 use std::fmt::Debug;
 
-impl<R> From<Error<R>> for TailwindError
+impl<R> From<Error<R>> for DokiError
 where
     R: Debug,
 {
@@ -12,7 +12,7 @@ where
     }
 }
 
-impl<R> From<ErrorVariant<R>> for TailwindError
+impl<R> From<ErrorVariant<R>> for DokiError
 where
     R: Debug,
 {
