@@ -1,6 +1,5 @@
 use super::*;
 
-mod data;
 mod item;
 
 pub fn SideNav(cx: Scope) -> Element {

@@ -9,6 +9,8 @@ pub use self::error::{DokiError, DokiErrorKind, MaybeRanged, Result};
 pub use url::Url;
 pub use yggdrasil_shared::DiagnosticLevel;
 
+#[cfg(feature = "config")]
+pub extern crate config;
 #[cfg(feature = "git2")]
 pub extern crate git2;
 #[cfg(feature = "globset")]
