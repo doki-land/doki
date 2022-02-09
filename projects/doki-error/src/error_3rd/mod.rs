@@ -1,3 +1,5 @@
+#[cfg(feature = "config")]
+mod for_config;
 #[cfg(feature = "docx-rs")]
 mod for_docx;
 #[cfg(feature = "git2")]

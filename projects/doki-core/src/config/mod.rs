@@ -6,9 +6,10 @@ mod sidebar;
 #[cfg(test)]
 mod test;
 mod version;
+
 pub use self::{languages::DokiLanguages, path::DokiPath, version::DokiVersion};
 use self::{mode::DokiUrlMode, parsing::*};
-use config::{FileFormat, Map, Value};
+use config::{Config, File, FileFormat, Map, Value};
 use doki_error::{DokiError, Result, Url};
 use std::{collections::HashMap, fmt::Write};
 

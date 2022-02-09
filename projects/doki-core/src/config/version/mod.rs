@@ -1,11 +1,11 @@
 use super::*;
 use doki_error::DokiError;
-use log::warn;
+use log::error;
 use semver::Version;
 use std::{
     collections::BTreeMap,
     fs,
-    fs::{DirEntry, ReadDir},
+    fs::DirEntry,
     path::{Path, PathBuf},
 };
 
@@ -49,14 +49,22 @@ impl DokiVersion {
         }
         Ok(())
     }
-    pub fn load_directories(&self, dir: &Path) -> Result<Vec<(String, PathBuf)>> {
+
+    fn load_directories(&self, dir: &Path) -> Result<Vec<(String, PathBuf)>> {
         let mut out = vec![];
         let mut vs = BTreeMap::default();
 
         for file in &self.head {
             let path = dir.join(&file);
-            out.push((file.to_owned(), path))
+            if path.exists() {
+                out.push((file.to_owned(), path))
+            }
+            else {
+                // need color
+                error!("Version `{}` not found!", file)
+            }
         }
+
         for file in fs::read_dir(dir)? {
             let dir = match path_from_dir_result(file) {
                 Some(s) => s,
@@ -66,15 +74,18 @@ impl DokiVersion {
                 Some(s) => {
                     vs.insert(s.0, (s.1, dir));
                 }
-                None => {
-                    warn!("xx is not semver");
-                    continue;
-                }
+                None => continue,
             }
         }
         out.extend(vs.into_iter().map(|f| f.1));
         Ok(out)
     }
+}
+
+pub fn load_version(dir: &Path) -> Result<(DokiVersion, Vec<(String, PathBuf)>)> {
+    let config = DokiVersion::parse(load_config_file(dir, "version")?);
+    let rest = config.load_directories(dir)?;
+    Ok((config, rest))
 }
 
 fn path_from_dir_result(res: std::io::Result<DirEntry>) -> Option<PathBuf> {
@@ -115,4 +126,10 @@ fn parse_version_from_path(dir: &Path) -> Option<(Version, String)> {
 fn test_version() {
     let cfg = load_config_string(include_str!("version.json5"), FileFormat::Json5);
     println!("{:#?}", DokiVersion::parse(cfg.cache));
+}
+
+#[test]
+fn test_version_load() {
+    env_logger::init();
+    println!("{:#?}", load_version(&PathBuf::from(".")))
 }
