@@ -3,12 +3,13 @@ use super::*;
 #[derive(Debug, Clone, PartialEq)]
 pub struct DokiLanguages {
     pub enable: bool,
+    pub mode: DokiUrlMode,
     pub base: String,
 }
 
 impl Default for DokiLanguages {
     fn default() -> Self {
-        Self { enable: true, base: "en".to_string() }
+        Self { enable: true, mode: Default::default(), base: "en".to_string() }
     }
 }
 
@@ -23,10 +24,26 @@ impl DokiLanguages {
         };
         let enable = parse_bool(&root, "enable").unwrap_or(default.enable);
         let base = parse_string(&root, "base").unwrap_or(default.base);
-        Self { enable, base }
+        Self { enable, mode: Default::default(), base }
+    }
+    pub fn write_url(&self, url: &mut Url, path: &str) -> Result<()> {
+        match self.mode {
+            DokiUrlMode::HtmlData => {}
+            DokiUrlMode::UrlPath => *url = url.join(path)?,
+            DokiUrlMode::UrlParameter { short } => {
+                match short {
+                    true => url.query_pairs_mut().append_pair("l", path),
+                    false => url.query_pairs_mut().append_pair("language", path),
+                };
+            }
+            DokiUrlMode::SubDomain => {
+                // TODO: url.domain()
+                return Err(DokiError::runtime_error("unimplemented: sub domain resolve for version"));
+            }
+        }
+        Ok(())
     }
 }
-
 
 #[test]
 fn test_language() {

@@ -2,19 +2,15 @@ mod languages;
 mod mode;
 mod parsing;
 mod path;
+mod sidebar;
 #[cfg(test)]
 mod test;
 mod version;
-mod sidebar;
-
 pub use self::{languages::DokiLanguages, path::DokiPath, version::DokiVersion};
-
-use self::parsing::*;
-use config::{Value,FileFormat};
-use std::fmt::{Write};
-use std::{collections::HashMap};
-use self::mode::DokiUrlMode;
-
+use self::{mode::DokiUrlMode, parsing::*};
+use config::{FileFormat, Value};
+use doki_error::{DokiError, Result, Url};
+use std::{collections::HashMap, fmt::Write};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct DokiConfig {

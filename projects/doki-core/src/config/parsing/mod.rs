@@ -1,5 +1,5 @@
-use config::{Config, File};
 use super::*;
+use config::{Config, File};
 
 #[inline]
 pub fn parse_bool(root: &HashMap<String, Value>, key: &str) -> Option<bool> {
@@ -46,14 +46,11 @@ fn get_normalized_object<'a>(root: &'a HashMap<String, Value>, key: &str) -> Opt
 pub fn normalized_string(key: &str) -> String {
     let mut normalized = String::new();
     for c in key.to_ascii_lowercase().chars() {
-        if c.is_ascii_alphanumeric() { normalized.push(c) } else { normalized.push('_') }
+        if c.is_ascii_alphanumeric() { normalized.push(c) } else { normalized.push('-') }
     }
     normalized
 }
 
 pub fn load_config_string(input: &str, format: FileFormat) -> Config {
-    Config::builder()
-        .add_source(File::from_str(input, format))
-        .build()
-        .unwrap()
+    Config::builder().add_source(File::from_str(input, format)).build().unwrap()
 }

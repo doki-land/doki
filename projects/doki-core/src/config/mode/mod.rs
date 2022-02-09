@@ -1,6 +1,5 @@
 use super::*;
 
-
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum DokiUrlMode {
     HtmlData,
@@ -20,8 +19,8 @@ impl DokiUrlMode {
         if let Some(o) = parse_string(root, key) {
             return match normalized_string(&o).as_str() {
                 "url" => Some(Self::UrlParameter { short: false }),
-                "url_short" => Some(Self::UrlParameter { short: true }),
-                "path" | "url_path" => Some(Self::UrlPath),
+                "url-short" => Some(Self::UrlParameter { short: true }),
+                "path" | "url-path" => Some(Self::UrlPath),
                 "html" => Some(Self::HtmlData),
                 _ => None,
             };
