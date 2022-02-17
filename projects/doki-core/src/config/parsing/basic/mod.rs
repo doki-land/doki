@@ -18,7 +18,6 @@ pub(crate) fn parse_object(root: &HashMap<String, Value>, key: &str) -> Option<H
     get_normalized_object(root, key)?.clone().into_table().ok()
 }
 
-
 #[inline]
 pub(crate) fn parse_array(root: &HashMap<String, Value>, key: &str) -> Option<Vec<Value>> {
     get_normalized_object(root, key)?.clone().into_array().ok()

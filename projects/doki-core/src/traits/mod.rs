@@ -1,7 +1,10 @@
-use serde::{Deserialize, Serialize};
 use doki_error::Result;
+use serde::{Deserialize, Serialize};
 
-pub trait ComponentData<'i>: where Self: Serialize + Deserialize<'i> {
+pub trait ComponentData<'i>
+where
+    Self: Serialize + Deserialize<'i>,
+{
     fn dump<T>(&self) -> Result<Vec<u8>> {
         Ok(bincode::serialize(self)?)
     }

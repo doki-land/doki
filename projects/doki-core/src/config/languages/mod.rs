@@ -16,26 +16,7 @@ impl Default for DokiLanguages {
 }
 
 impl DokiLanguages {
-    pub fn write_url(&self, url: &mut Url, path: &str) -> Result<()> {
-        match self.mode {
-            DokiUrlMode::HtmlData => {
-                // do nothing
-                return Err(DokiError::runtime_error("unimplemented!"));
-            }
-            DokiUrlMode::UrlPath => *url = url.join(path)?,
-            DokiUrlMode::UrlParameter { short } => {
-                match short {
-                    true => url.query_pairs_mut().append_pair("l", path),
-                    false => url.query_pairs_mut().append_pair("language", path),
-                };
-            }
-            DokiUrlMode::SubDomain => {
-                // TODO: url.domain()
-                return Err(DokiError::runtime_error("unimplemented: sub domain resolve for version"));
-            }
-        }
-        Ok(())
-    }
+
 }
 
 #[test]

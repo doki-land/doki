@@ -1,9 +1,5 @@
 use super::*;
 
-pub(crate) fn parse_url(root: &HashMap<String, Value>) -> Option<String> {
-    parse_string(&root, "url")
-}
-
 pub(crate) fn parse_url_fragment(root: &HashMap<String, Value>, key: &str) -> Option<Vec<String>> {
     let maybe_string = || -> Option<Vec<String>> {
         let url = parse_string(root, key)?;
@@ -22,4 +18,35 @@ pub(crate) fn safe_url_string(key: &str) -> String {
         if c.is_ascii_alphanumeric() { normalized.push(c) } else { normalized.push('-') }
     }
     normalized
+}
+
+impl DokiUrlMode {
+    pub fn rewrite_url(&self, url: Url, path: Vec<String>) -> Result<Url> {
+        match self {
+            // do nothing
+            Self::HtmlData => Ok(url),
+            Self::UrlPath => Ok(url.join(&path.join("/"))?),
+            Self::UrlQuery(name) => {
+                let mut out = url;
+                out.query_pairs_mut().append_pair(name, &path.join("-"));
+                Ok(out)
+            }
+            // TODO: url.domain()
+            Self::SubDomain => Err(DokiError::runtime_error("unimplemented: sub domain resolve for version")),
+        }
+    }
+}
+
+pub fn rewrite_url() {
+
+}
+
+pub fn rewrite_path() {
+
+}
+
+impl DokiSidebar {
+    pub fn get_link() {
+
+    }
 }

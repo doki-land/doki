@@ -21,21 +21,6 @@ impl Default for DokiVersion {
 }
 
 impl DokiVersion {
-    pub fn write_url(&self, url: &mut Url, path: &str) -> Result<()> {
-        match self.mode {
-            DokiUrlMode::HtmlData => {}
-            DokiUrlMode::UrlPath => *url = url.join(path)?,
-            DokiUrlMode::UrlParameter { short } => {
-                match short {
-                    true => url.query_pairs_mut().append_pair("v", path),
-                    false => url.query_pairs_mut().append_pair("version", path),
-                };
-            }
-            DokiUrlMode::SubDomain => return Err(DokiError::runtime_error("Can not set sub domain for version!")),
-        }
-        Ok(())
-    }
-
     fn load_directories(&mut self, dir: &Path) -> Result<()> {
         let dir_debug = absolute_path(dir);
         let mut vs = BTreeMap::default();

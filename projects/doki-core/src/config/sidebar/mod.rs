@@ -4,10 +4,7 @@ mod parser;
 #[cfg(test)]
 mod test;
 
-
 use super::*;
-
-
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DokiSidebar {
@@ -17,8 +14,8 @@ pub struct DokiSidebar {
     pub section: String,
     /// set specialized url segment
     ///
-    /// use [`DokiSidebar::section`] if missing
-    url: Option<String>,
+    /// use [`section`] if missing
+    pub url: Option<String>,
     /// groups in this sidebar
     pub items: Vec<SidebarGroup>,
 }

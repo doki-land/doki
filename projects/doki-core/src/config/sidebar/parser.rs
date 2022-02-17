@@ -1,4 +1,3 @@
-use std::path::PathBuf;
 use super::*;
 
 impl DokiSidebar {
@@ -10,7 +9,8 @@ impl DokiSidebar {
         };
         let enable = parse_bool(&root, "enable").unwrap_or(default.enable);
         let section = parse_string(&root, "section").unwrap_or(default.section);
-        Self { enable, section, url: parse_url(&root), items: Self::parse_items(&root) }
+        let url = parse_string(&root, "url");
+        Self { enable, section, url, items: Self::parse_items(&root) }
     }
     #[inline]
     fn parse_items(root: &HashMap<String, Value>) -> Vec<SidebarGroup> {
@@ -79,20 +79,3 @@ impl SidebarList {
         Self { title, rewrite_path, rewrite_url, icon: None, foldable, folded, items: vec![] }
     }
 }
-
-pub(crate) fn parse_url(root: &HashMap<String, Value>) -> Option<String> {
-    parse_string(&root, "url")
-}
-
-pub(crate) fn parse_url_fragment(root: &HashMap<String, Value>, key: &str) -> Option<Vec<String>> {
-    let maybe_string = || -> Option<Vec<String>> {
-        let url = parse_string(root, key)?;
-        Some(url.split("/").map(safe_url_string).collect())
-    };
-    let maybe_array = || -> Option<Vec<String>> {
-        let url = parse_string_list(root, key)?;
-        Some(url.into_iter().map(|s| safe_url_string(&s)).collect())
-    };
-    maybe_string().or_else(maybe_array)
-}
-

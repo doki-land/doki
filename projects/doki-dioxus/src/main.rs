@@ -13,10 +13,10 @@ pub use self::{
     utils::*,
     widgets::{BackToTop, FloatNav},
 };
-use dioxus::prelude::*;
-use rsass::compile_scss;
-use doki_core::DokiSidebar;
 use crate::sidebar::SideNavData;
+use dioxus::prelude::*;
+use doki_core::DokiSidebar;
+use rsass::compile_scss;
 
 fn main() {
     wasm_logger::init(wasm_logger::Config::default());
@@ -34,7 +34,6 @@ pub fn main_ssr() {
 }
 
 pub fn AppWeb(cx: Scope) -> Element {
-
     let side_nav = DokiSidebar::default();
     cx.render(rsx! {
         Headnav {

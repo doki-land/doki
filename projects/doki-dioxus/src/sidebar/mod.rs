@@ -8,7 +8,7 @@ use doki_core::{
 
 #[derive(Props, PartialEq)]
 pub struct SideNavData {
-    data: DokiSidebar
+    data: DokiSidebar,
 }
 
 pub fn SideNav(cx: Scope<SideNavData>) -> Element {

@@ -3,5 +3,4 @@ mod traits;
 
 // pub mod pages;
 
-pub use self::config::*;
-pub use self::traits::*;
+pub use self::{config::*, traits::*};

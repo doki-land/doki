@@ -3,19 +3,16 @@ mod parser;
 
 use super::*;
 
-
-
-#[derive(Debug, Copy, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum DokiUrlMode {
     HtmlData,
     UrlPath,
-    UrlParameter { short: bool },
+    UrlQuery(String),
     SubDomain,
 }
 
 impl Default for DokiUrlMode {
     fn default() -> Self {
-        Self::UrlParameter { short: true }
+        Self::UrlQuery("query".to_string())
     }
 }
-
