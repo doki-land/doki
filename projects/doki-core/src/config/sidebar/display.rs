@@ -37,13 +37,3 @@ impl Default for SidebarList {
         }
     }
 }
-
-impl DokiSidebar {
-    /// get url path for rewrite
-    pub fn get_url_path(&self) -> Vec<String> {
-        match &self.url {
-            Some(s) => { vec![s.to_owned()] }
-            _ => { vec![self.section.to_owned()] }
-        }
-    }
-}
