@@ -5,7 +5,7 @@ use super::*;
 
 
 
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Serialize, Deserialize)]
 pub enum DokiUrlMode {
     HtmlData,
     UrlPath,

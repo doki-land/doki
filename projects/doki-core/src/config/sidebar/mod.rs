@@ -2,9 +2,12 @@ mod display;
 #[cfg(feature = "non-wasm")]
 mod parser;
 
+
 use super::*;
 
-#[derive(Debug, Clone, PartialEq)]
+
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DokiSidebar {
     /// show this sidebar or not
     pub enable: bool,
@@ -18,14 +21,14 @@ pub struct DokiSidebar {
     pub items: Vec<SidebarGroup>,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SidebarGroup {
     /// title of the sidebar group
     pub title: Option<String>,
     pub items: Vec<SidebarGroupItemKind>,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum SidebarGroupItemKind {
     /// A sidebar item
     Simple(SidebarItem),
@@ -33,7 +36,7 @@ pub enum SidebarGroupItemKind {
     List(SidebarList),
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SidebarItem {
     /// title of the item
     pub name: String,
@@ -42,7 +45,7 @@ pub struct SidebarItem {
     pub link: String,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SidebarList {
     /// title of list
     pub title: String,
@@ -60,7 +63,7 @@ pub struct SidebarList {
     pub items: Vec<SidebarItem>,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum SidebarItemIcon {
     Numeric(Vec<usize>),
     Icon(String),

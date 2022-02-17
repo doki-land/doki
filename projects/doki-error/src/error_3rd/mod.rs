@@ -18,7 +18,7 @@ mod for_num;
 mod for_pest;
 #[cfg(feature = "rsass")]
 mod for_sass;
-#[cfg(feature = "serde_json")]
-mod for_serde_json;
+#[cfg(feature = "serde")]
+mod for_serde;
 #[cfg(feature = "chrono")]
 mod for_time;

@@ -7,15 +7,16 @@ pub mod sidebar;
 mod test;
 mod version;
 
+use serde::{Deserialize, Serialize};
 pub use self::{languages::DokiLanguages, path::DokiPath, sidebar::DokiSidebar, version::DokiVersion};
 use self::{mode::DokiUrlMode, parsing::*};
-
+use doki_error::{DokiError, Result, Url};
+use std::{collections::HashMap, fmt::Write};
 #[cfg(feature = "non-wasm")]
 use {
     config::{Config, File, FileFormat, Map, Value}
 };
-use doki_error::{DokiError, Result, Url};
-use std::{collections::HashMap, fmt::Write};
+use crate::ComponentData;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct DokiConfig {
@@ -30,5 +31,7 @@ pub struct DokiConfig {
     /// [`DokiInternationalization`]
     pub i18n: DokiLanguages,
 }
+
+impl<'a> ComponentData<'a> for DokiSidebar { }
 
 pub struct DokiDatabase {}

@@ -10,6 +10,7 @@ edition = "2018"
 
 [dependencies]
 wasm-logger = "0.2.0"
+serde = "1.0.136"
 log = "0.4.6"
 rsass = "0.23.4"
 parking_lot = { version = "0.11.1", features = ["wasm-bindgen"]}
@@ -28,3 +29,10 @@ wasm-bindgen = "0.2.79"
 
 [features]
 default = []
+
+[package.metadata.wee]
+t = "cargo test"
+p = "cargo publish --allow-dirty"
+s = "trunk serve"
+sw = "dioxus serve"
+sd = "dioxus serve --platform desktop"

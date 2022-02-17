@@ -2,7 +2,7 @@ use super::*;
 #[cfg(feature = "non-wasm")]
 mod parser;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DokiLanguages {
     pub enable: bool,
     pub mode: DokiUrlMode,

@@ -14,7 +14,7 @@ use std::{
 #[cfg(feature = "non-wasm")]
 pub use self::parser::load_version;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DokiVersion {
     pub enable: bool,
     pub mode: DokiUrlMode,
@@ -78,8 +78,6 @@ impl DokiVersion {
         Ok(())
     }
 }
-
-
 
 fn path_from_dir_result(res: std::io::Result<DirEntry>) -> Option<PathBuf> {
     let path = res.ok()?.path();
