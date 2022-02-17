@@ -21,7 +21,7 @@ impl DioxusRender for DokiSidebar {
             nav {
                 class: "bg-white flex flex-col xl:w-64",
                 div {
-
+                    "side"
                 }
             }
         }

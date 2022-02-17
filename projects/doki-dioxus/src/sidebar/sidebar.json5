@@ -1,43 +1,30 @@
 {
+    "enable": true,
     "section": "id",
-    url: "",
-    children: [
+    "url": null,
+    "items": [
         {
-            group: "Test",
-            group_localized: {
-                cn_hans: "测试"
-            },
-            items: [
+            "title": "Test",
+            "items": [
                 {
-                    name: "simple",
-                    icon: "",
-                    // relative path
-                    path: "",
-                    url: "",
-                    name_loalized: {
-                        cn_hans: "简单"
+                    "Simple": {
+                        "name": "simple",
+                        "icon": null,
+                        "link": ""
                     }
                 },
                 {
-                    list: "a",
-                    icon: "",
-                    can_close: true,
-                    start_close: false,
-                    items: [
-                        {
-                            name: "",
-                            icon: "",
-                            path: ""
-                        }
-                    ],
-                    list_localize: {
-                        cn_hans: "简单"
+                    "List": {
+                        "title": "a",
+                        "path": "",
+                        "url": "",
+                        "icon": null,
+                        "foldable": false,
+                        "folded": false,
+                        "items": []
                     }
                 }
             ]
         }
-    ],
-    section_localize: {
-        cn_hans: "编号"
-    }
+    ]
 }

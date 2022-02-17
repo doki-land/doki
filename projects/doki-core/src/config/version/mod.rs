@@ -1,16 +1,7 @@
 #[cfg(feature = "non-wasm")]
 mod parser;
 use super::*;
-use doki_error::DokiError;
-use fs::read_dir;
-use log::{error, info};
-use semver::Version;
-use std::{
-    collections::BTreeMap,
-    fs,
-    fs::{DirEntry},
-    path::{Path, PathBuf},
-};
+
 #[cfg(feature = "non-wasm")]
 pub use self::parser::load_version;
 

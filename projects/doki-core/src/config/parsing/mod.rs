@@ -43,16 +43,16 @@ fn get_normalized_object<'a>(root: &'a HashMap<String, Value>, key: &str) -> Opt
     if key.chars().all(|c| c.is_ascii_alphanumeric()) {
         return root.get(key);
     }
-    let target = normalized_string(key);
+    let target = safe_url_string(key);
     for (key, v) in root {
-        if normalized_string(key) == target {
+        if safe_url_string(key) == target {
             return Some(v);
         }
     }
     None
 }
 
-pub fn normalized_string(key: &str) -> String {
+pub fn safe_url_string(key: &str) -> String {
     let mut normalized = String::new();
     for c in key.to_ascii_lowercase().chars() {
         if c.is_ascii_alphanumeric() { normalized.push(c) } else { normalized.push('-') }

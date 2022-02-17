@@ -6,21 +6,24 @@
             items: [
                 {
                     name: "simple",
-                    icon: "",
+                    // assert path
+                    icon: "@a",
                     // relative path
-                    path: "",
-                    url: "",
+                    path: "simple/readme.md",
+                    url: "simple/readme",
                 },
                 {
-                    list: "a",
+                    list: "nested",
                     icon: "",
-                    can_close: true,
-                    start_close: false,
+                    foldable: true,
+                    folded: false,
                     items: [
                         {
-                            name: "",
-                            icon: "",
-                            path: ""
+                            name: "simple",
+                            icon: "number",
+                            // relative path
+                            path: "simple/readme.md",
+                            url: "simple/readme"
                         }
                     ],
                 }

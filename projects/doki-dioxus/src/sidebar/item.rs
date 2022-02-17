@@ -37,11 +37,18 @@ impl DioxusRender for SidebarItemIcon {
                     }
                 }
             }
-            Self::Icon(_) => {
+            Self::IconSVG(_) => {
                 rsx! {
                     svg {
-                    class: "w-1 h-1",
+                        class: "w-1 h-1",
+                    }
                 }
+            }
+            Self::IconLink(_) => {
+                rsx! {
+                    img {
+                        class: "w-1 h-1",
+                    }
                 }
             }
         }
@@ -59,13 +66,13 @@ impl DioxusRender for SidebarList {
                 class: "flex flex-col",
                 button {
                     class: "flex flex-row",
-                svg {
-                    class: "w-1 h-1",
-                }
-                "click"
-                svg {
-                    class: "w-1 h-1",
-                }
+                    svg {
+                        class: "w-1 h-1",
+                    }
+                    "click"
+                    svg {
+                        class: "w-1 h-1",
+                    }
                 }
                 ul {
                     "TExt"

@@ -20,7 +20,7 @@ impl Default for SidebarGroupItemKind {
 
 impl Default for SidebarItem {
     fn default() -> Self {
-        Self { icon: None, name: "Test Item".to_string(), link: String::new() }
+        Self { icon: None, name: "Test Item".to_string(), link: String::new(), url: None }
     }
 }
 

@@ -1,6 +1,8 @@
 mod display;
 #[cfg(feature = "non-wasm")]
 mod parser;
+#[cfg(test)]
+mod test;
 
 
 use super::*;
@@ -42,6 +44,7 @@ pub struct SidebarItem {
     pub name: String,
     /// icon of the item
     pub icon: Option<SidebarItemIcon>,
+    pub url: Option<String>,
     pub link: String,
 }
 
@@ -66,23 +69,18 @@ pub struct SidebarList {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum SidebarItemIcon {
     Numeric(Vec<usize>),
-    Icon(String),
+    IconSVG(String),
+    IconLink(String),
 }
 
 impl DokiSidebar {
     /// get current segment of url
     pub fn get_url_segment(&self) -> String {
         let url = self.url.as_ref().unwrap_or(&self.section);
-        normalized_string(url)
+        safe_url_string(url)
     }
     pub fn write_url(&self, url: &mut Url) -> Result<()> {
         *url = url.join(&self.get_url_segment())?;
         Ok(())
     }
-}
-
-#[test]
-fn test_sidebar() {
-    let cfg = load_config_string(include_str!("sidebar.json5"), FileFormat::Json5);
-    println!("{:#?}", DokiSidebar::parse(cfg.cache));
 }

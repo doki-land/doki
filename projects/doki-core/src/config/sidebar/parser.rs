@@ -10,7 +10,7 @@ impl DokiSidebar {
         };
         let enable = parse_bool(&root, "enable").unwrap_or(default.enable);
         let section = parse_string(&root, "section").unwrap_or(default.section);
-        Self { enable, section, url: parse_string(&root, "url"), items: Self::parse_items(&root) }
+        Self { enable, section, url: parse_url(&root), items: Self::parse_items(&root) }
     }
     #[inline]
     fn parse_items(root: &HashMap<String, Value>) -> Vec<SidebarGroup> {
@@ -30,19 +30,18 @@ impl SidebarGroup {
             Err(_) => return default,
         };
         let title = parse_string(&root, "group");
-        Self { title, items: Self::parse_items(&root) }
+        let items = Self::parse_items(&root).unwrap_or(default.items);
+        Self { title, items }
     }
     #[inline]
-    fn parse_items(root: &HashMap<String, Value>) -> Vec<SidebarGroupItemKind> {
+    fn parse_items(root: &HashMap<String, Value>) -> Option<Vec<SidebarGroupItemKind>> {
         let mut out = vec![];
-        if let Some(s) = parse_array(root, "items") {
-            for i in s {
-                if let Some(s) = SidebarGroupItemKind::parse(i) {
-                    out.push(s)
-                }
-            }
+        let s = parse_array(root, "items")?;
+        for i in s {
+            let item = SidebarGroupItemKind::parse(i)?;
+            out.push(item)
         }
-        out
+        Some(out)
     }
 }
 
@@ -63,7 +62,8 @@ impl SidebarItem {
     pub fn parse(root: Map<String, Value>) -> Self {
         let default = Self::default();
         let name = parse_string(&root, "name").unwrap_or(default.name);
-        Self { name, icon: None, link: "".to_string() }
+        let link = Self::parse_link(&root).unwrap_or(default.link);
+        Self { name, icon: None, url: None, link }
     }
 }
 
@@ -74,3 +74,21 @@ impl SidebarList {
         Self { title, path: "".to_string(), url: "".to_string(), icon: None, foldable: false, folded: false, items: vec![] }
     }
 }
+
+pub(crate) fn parse_url(root: &HashMap<String, Value>) -> Option<String> {
+    parse_string(&root, "url")
+}
+
+pub(crate) fn parse_url_fragment(root: &HashMap<String, Value>) -> Option<Vec<String>> {
+    let maybe_string = || -> Option<Vec<String>> {
+        let url = parse_string(root, "url")?;
+        Some(url.split("/").collect())
+    };
+    let maybe_array = || -> Option<Vec<String>> {
+        let url = parse_string_list(root, "url")?;
+        Some(url)
+    };
+    let url = maybe_string().or_else(maybe_array)?;
+    Some(url.into_iter().map(safe_url_string).collect())
+}
+
