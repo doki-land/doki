@@ -1,5 +1,6 @@
 mod languages;
 mod mode;
+#[cfg(feature = "non-wasm")]
 mod parsing;
 mod path;
 mod sidebar;
@@ -19,12 +20,13 @@ use std::{
 };
 use serde_derive::{Deserialize, Serialize};
 pub use self::{languages::DokiLanguages, path::DokiPath, sidebar::DokiSidebar, version::DokiVersion,navbar::*};
-use self::{mode::DokiUrlMode, parsing::*};
+use self::{mode::DokiUrlMode};
 use doki_error::{DokiError, Result, Url};
 use std::{collections::HashMap, fmt::Write};
 #[cfg(feature = "non-wasm")]
 use {
-    config::{Config, File, FileFormat, Map, Value}
+    config::*,
+    self::parsing::*
 };
 use crate::ComponentData;
 

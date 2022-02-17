@@ -20,7 +20,7 @@ impl Default for SidebarGroupItemKind {
 
 impl Default for SidebarItem {
     fn default() -> Self {
-        Self { icon: None, name: "Test Item".to_string(), link: String::new(), url: None }
+        Self { icon: None, name: "Test Item".to_string(), url: None }
     }
 }
 
@@ -28,8 +28,8 @@ impl Default for SidebarList {
     fn default() -> Self {
         Self {
             title: "Test List".to_string(),
-            path: "".to_string(),
-            url: "".to_string(),
+            rewrite_path: None,
+            rewrite_url: None,
             icon: None,
             foldable: false,
             folded: false,

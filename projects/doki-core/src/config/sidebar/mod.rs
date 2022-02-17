@@ -44,18 +44,17 @@ pub struct SidebarItem {
     pub name: String,
     /// icon of the item
     pub icon: Option<SidebarItemIcon>,
-    pub url: Option<String>,
-    pub link: String,
+    pub url: Option<Vec<String>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SidebarList {
     /// title of list
     pub title: String,
-    /// unix path
-    pub path: String,
-
-    url: String,
+    /// unix relative path
+    pub rewrite_path: Option<String>,
+    /// rewrite url
+    pub rewrite_url: Option<Vec<String>>,
     /// icon of the list
     pub icon: Option<SidebarItemIcon>,
     /// This tab can be collapsed

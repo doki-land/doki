@@ -62,8 +62,8 @@ impl SidebarItem {
     pub fn parse(root: Map<String, Value>) -> Self {
         let default = Self::default();
         let name = parse_string(&root, "name").unwrap_or(default.name);
-        let link = Self::parse_link(&root).unwrap_or(default.link);
-        Self { name, icon: None, url: None, link }
+        let url = parse_url_fragment(&root, "url");
+        Self { name, icon: None, url }
     }
 }
 
@@ -71,7 +71,12 @@ impl SidebarList {
     pub fn parse(root: Map<String, Value>) -> Self {
         let default = Self::default();
         let title = parse_string(&root, "list").unwrap_or(default.title);
-        Self { title, path: "".to_string(), url: "".to_string(), icon: None, foldable: false, folded: false, items: vec![] }
+        let rewrite_path = parse_string(&root, "rewrite_path").or_else(|| parse_string(&root, "path"));
+        let rewrite_url = parse_url_fragment(&root, "rewrite_url").or_else(|| parse_url_fragment(&root, "url"));
+        // let icon
+        let foldable = parse_bool(&root, "foldable").unwrap_or(default.foldable);
+        let folded = parse_bool(&root, "folded").unwrap_or(default.folded);
+        Self { title, rewrite_path, rewrite_url, icon: None, foldable, folded, items: vec![] }
     }
 }
 
@@ -79,16 +84,15 @@ pub(crate) fn parse_url(root: &HashMap<String, Value>) -> Option<String> {
     parse_string(&root, "url")
 }
 
-pub(crate) fn parse_url_fragment(root: &HashMap<String, Value>) -> Option<Vec<String>> {
+pub(crate) fn parse_url_fragment(root: &HashMap<String, Value>, key: &str) -> Option<Vec<String>> {
     let maybe_string = || -> Option<Vec<String>> {
-        let url = parse_string(root, "url")?;
-        Some(url.split("/").collect())
+        let url = parse_string(root, key)?;
+        Some(url.split("/").map(safe_url_string).collect())
     };
     let maybe_array = || -> Option<Vec<String>> {
-        let url = parse_string_list(root, "url")?;
-        Some(url)
+        let url = parse_string_list(root, key)?;
+        Some(url.into_iter().map(|s| safe_url_string(&s)).collect())
     };
-    let url = maybe_string().or_else(maybe_array)?;
-    Some(url.into_iter().map(safe_url_string).collect())
+    maybe_string().or_else(maybe_array)
 }
 

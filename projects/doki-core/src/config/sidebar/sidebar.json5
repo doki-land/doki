@@ -15,6 +15,8 @@
                 {
                     list: "nested",
                     icon: "",
+                    rewrite_path: "../../nested/x",
+                    rewrite_url: "nested/x",
                     foldable: true,
                     folded: false,
                     items: [
@@ -22,8 +24,8 @@
                             name: "simple",
                             icon: "number",
                             // relative path
-                            path: "simple/readme.md",
-                            url: "simple/readme"
+                            path: "readme.md",
+                            url: "readme"
                         }
                     ],
                 }
