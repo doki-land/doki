@@ -9,7 +9,7 @@ impl DokiVersion {
         };
         let enable = parse_bool(&root, "enable").unwrap_or(default.enable);
         let head = parse_string_list(&root, "head").unwrap_or(default.head);
-        let mode = DokiUrlMode::parse(&root, "mode", ("version", "v")).unwrap_or_default();
+        let mode = DokiUrlMode::parse(&root, "mode").unwrap_or_default();
         Self { enable, mode, head, ..Self::default() }
     }
 }

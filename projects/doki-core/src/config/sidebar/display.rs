@@ -8,7 +8,7 @@ impl Default for DokiSidebar {
 
 impl Default for SidebarGroup {
     fn default() -> Self {
-        Self { title: None, items: vec![] }
+        Self { title: None, rewrite_url: None, items: vec![] }
     }
 }
 
@@ -20,7 +20,7 @@ impl Default for SidebarGroupItemKind {
 
 impl Default for SidebarItem {
     fn default() -> Self {
-        Self { icon: None, name: "Test Item".to_string(), url: None }
+        Self { icon: None, name: "Test Item".to_string(), url: None, path: None }
     }
 }
 

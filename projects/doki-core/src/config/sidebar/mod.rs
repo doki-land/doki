@@ -24,6 +24,7 @@ pub struct DokiSidebar {
 pub struct SidebarGroup {
     /// title of the sidebar group
     pub title: Option<String>,
+    pub rewrite_url: Option<Vec<String>>,
     pub items: Vec<SidebarGroupItemKind>,
 }
 
@@ -41,6 +42,7 @@ pub struct SidebarItem {
     pub name: String,
     /// icon of the item
     pub icon: Option<SidebarItemIcon>,
+    pub path: Option<String>,
     pub url: Option<Vec<String>>,
 }
 
@@ -67,16 +69,4 @@ pub enum SidebarItemIcon {
     Numeric(Vec<usize>),
     IconSVG(String),
     IconLink(String),
-}
-
-impl DokiSidebar {
-    /// get current segment of url
-    pub fn get_url_segment(&self) -> String {
-        let url = self.url.as_ref().unwrap_or(&self.section);
-        safe_url_string(url)
-    }
-    pub fn write_url(&self, url: &mut Url) -> Result<()> {
-        *url = url.join(&self.get_url_segment())?;
-        Ok(())
-    }
 }

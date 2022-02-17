@@ -24,6 +24,8 @@ use std::{
     fs::DirEntry,
     path::{Path, PathBuf},
 };
+use std::lazy::SyncLazy;
+
 #[cfg(feature = "non-wasm")]
 use {self::parsing::*, config::*};
 
@@ -39,6 +41,17 @@ pub struct DokiConfig {
     pub version: DokiVersion,
     /// [`DokiInternationalization`]
     pub i18n: DokiLanguages,
+}
+
+impl Default for DokiConfig {
+    fn default() -> Self {
+        Self {
+            url_base: vec![],
+            url_end: "".to_string(),
+            version: Default::default(),
+            i18n: Default::default()
+        }
+    }
 }
 
 impl<'a> ComponentData<'a> for DokiSidebar {}

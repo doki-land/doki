@@ -31,7 +31,8 @@ impl SidebarGroup {
         };
         let title = parse_string(&root, "group");
         let items = Self::parse_items(&root).unwrap_or(default.items);
-        Self { title, items }
+        let rewrite_url = rewrite_url(&root);
+        Self { title, rewrite_url, items }
     }
     #[inline]
     fn parse_items(root: &HashMap<String, Value>) -> Option<Vec<SidebarGroupItemKind>> {
@@ -63,7 +64,7 @@ impl SidebarItem {
         let default = Self::default();
         let name = parse_string(&root, "name").unwrap_or(default.name);
         let url = parse_url_fragment(&root, "url");
-        Self { name, icon: None, url }
+        Self { name, icon: None, path: None, url }
     }
 }
 
@@ -72,10 +73,15 @@ impl SidebarList {
         let default = Self::default();
         let title = parse_string(&root, "list").unwrap_or(default.title);
         let rewrite_path = parse_string(&root, "rewrite_path").or_else(|| parse_string(&root, "path"));
-        let rewrite_url = parse_url_fragment(&root, "rewrite_url").or_else(|| parse_url_fragment(&root, "url"));
+        let rewrite_url = rewrite_url(&root);
         // let icon
         let foldable = parse_bool(&root, "foldable").unwrap_or(default.foldable);
         let folded = parse_bool(&root, "folded").unwrap_or(default.folded);
         Self { title, rewrite_path, rewrite_url, icon: None, foldable, folded, items: vec![] }
     }
+}
+
+
+fn rewrite_url(root: &Map<String, Value>) -> Option<Vec<String>> {
+    parse_url_fragment(root, "rewrite_url").or_else(|| parse_url_fragment(root, "url"))
 }
