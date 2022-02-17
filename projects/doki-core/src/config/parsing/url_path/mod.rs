@@ -23,3 +23,4 @@ pub(crate) fn safe_url_string(key: &str) -> String {
     }
     normalized
 }
+

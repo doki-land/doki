@@ -1,6 +1,8 @@
 #[cfg(feature = "non-wasm")]
 mod parser;
 
+mod url_builder;
+
 use super::*;
 
 pub static LOCALHOST: SyncLazy<Url> = SyncLazy::new(|| Url::parse("https://localhost").unwrap());
@@ -12,6 +14,12 @@ pub enum DokiUrlMode {
     UrlQuery { short: bool },
     SubDomain,
 }
+
+pub struct UrlBuilder {
+    query: HashMap<String, String>,
+    end: String,
+}
+
 
 impl Default for DokiUrlMode {
     fn default() -> Self {
