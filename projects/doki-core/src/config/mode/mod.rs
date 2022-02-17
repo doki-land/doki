@@ -15,8 +15,12 @@ pub enum DokiUrlMode {
     SubDomain,
 }
 
+#[derive(Clone, Debug, PartialEq)]
 pub struct UrlBuilder {
-    query: HashMap<String, String>,
+    domain: Vec<String>,
+    host: String,
+    path: Vec<String>,
+    query: BTreeMap<String, String>,
     end: String,
 }
 
