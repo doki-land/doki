@@ -19,7 +19,7 @@ use semver::Version;
 use serde_derive::{Deserialize, Serialize};
 use std::{
     collections::{BTreeMap, HashMap},
-    fmt::Write,
+    fmt::{Debug, Display, Formatter, Write},
     fs,
     fs::DirEntry,
     lazy::SyncLazy,

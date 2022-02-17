@@ -8,7 +8,8 @@
     mode: "html",
     /// next, nightly, latest, etc.
     /// can be multiple head, like `["nightly", "beta", "alpha"]`
+    /// automatic fallback
     head: "next",
     /// excluded versions
-    excludes: []
+    excludes: [],
 }

@@ -20,6 +20,8 @@ serde = { version = "1.0.136", optional = true}
 serde_derive = { version = "1.0.136", optional = true}
 serde_json = { version = "1.0.79", optional = true }
 bincode = { version = "1.3.3", optional = true }
+fluent = "0.16.0"
+fluent-fallback = "0.6.0"
 
 [dependencies.doki-error]
 version = "1.0.3"

@@ -1,4 +1,13 @@
 {
     base: "zh-hans",
-    path: "zh-hans"
+    path: "zh-hans",
+    languages: {
+        zh_hant: {
+            rewrite_path: "@a",
+            rewrite_url: "auto",
+            feedback: [
+                "a"
+            ]
+        }
+    },
 }

@@ -1,5 +1,6 @@
 {
     section: "id",
+    rewrite_url: "ac",
     items: [
         {
             group: "Test",
