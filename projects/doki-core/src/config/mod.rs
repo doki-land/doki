@@ -22,9 +22,9 @@ use std::{
     fmt::Write,
     fs,
     fs::DirEntry,
+    lazy::SyncLazy,
     path::{Path, PathBuf},
 };
-use std::lazy::SyncLazy;
 
 #[cfg(feature = "non-wasm")]
 use {self::parsing::*, config::*};
@@ -45,12 +45,7 @@ pub struct DokiConfig {
 
 impl Default for DokiConfig {
     fn default() -> Self {
-        Self {
-            url_base: vec![],
-            url_end: "".to_string(),
-            version: Default::default(),
-            i18n: Default::default()
-        }
+        Self { url_base: vec![], url_end: "".to_string(), version: Default::default(), i18n: Default::default() }
     }
 }
 

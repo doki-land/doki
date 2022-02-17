@@ -81,7 +81,6 @@ impl SidebarList {
     }
 }
 
-
 fn rewrite_url(root: &Map<String, Value>) -> Option<Vec<String>> {
     parse_url_fragment(root, "rewrite_url").or_else(|| parse_url_fragment(root, "url"))
 }

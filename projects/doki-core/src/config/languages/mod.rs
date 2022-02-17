@@ -15,9 +15,7 @@ impl Default for DokiLanguages {
     }
 }
 
-impl DokiLanguages {
-
-}
+impl DokiLanguages {}
 
 #[test]
 fn test_language() {

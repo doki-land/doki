@@ -1,3 +1,1 @@
-pub fn rewrite_path() {
-
-}
+pub fn rewrite_path() {}

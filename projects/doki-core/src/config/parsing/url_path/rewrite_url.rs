@@ -1,12 +1,14 @@
-use crate::config::mode::LOCALHOST;
-use crate::config::sidebar::{SidebarGroup, SidebarGroupItemKind, SidebarItem, SidebarList};
 use super::*;
+use crate::config::{
+    mode::LOCALHOST,
+    sidebar::{SidebarGroup, SidebarGroupItemKind, SidebarItem, SidebarList},
+};
 
 macro_rules! rewrite_url {
     ($list:expr, $base:expr) => {
         match &$list {
-            None => { Ok($base.to_owned()) }
-            Some(url) => { rewrite_url($base, url) }
+            None => Ok(format!("{}/", $base)),
+            Some(url) => rewrite_url($base, url),
         }
     };
 }
@@ -19,16 +21,25 @@ fn rewrite_url_query(url: &Url, path: &str, name: &str) -> Result<Url> {
 }
 
 #[inline]
-pub fn rewrite_url(url: &Url, path: &[String]) -> Result<Url> {
+fn rewrite_url_dir(url: &Url, path: &str) -> Result<Url> {
+    Ok(url.join(&format!("{}/", path))?)
+}
+
+#[inline]
+fn rewrite_url_list(url: &Url, path: &Vec<String>) -> Result<Url> {
+    let mut path = path.clone();
+    path.push(String::new());
     Ok(url.join(&path.join("/"))?)
 }
 
-
-
+#[inline]
+fn rewrite_url_list_maybe(url: &Url, path: Option<Vec<String>>) -> Result<Url> {
+    Ok(url.join(&path.join("/"))?)
+}
 
 impl DokiConfig {
     pub fn get_link(&self) -> Result<Url> {
-        let out = rewrite_url(&LOCALHOST, &self.url_base)?;
+        let out = rewrite_url_list(&LOCALHOST, &self.url_base)?;
         Ok(out)
     }
 }
@@ -41,8 +52,8 @@ impl DokiLanguages {
             DokiUrlMode::UrlPath => Ok(base.join(path)?),
             DokiUrlMode::UrlQuery { short } => {
                 let name = match short {
-                    true => {"l"}
-                    false => {"language"}
+                    true => "l",
+                    false => "language",
                 };
                 rewrite_url_query(base, path, name)
             }
@@ -52,7 +63,6 @@ impl DokiLanguages {
     }
 }
 
-
 impl DokiVersion {
     pub fn get_link(&self, base: &Url, path: &str) -> Result<Url> {
         match self.mode {
@@ -61,8 +71,8 @@ impl DokiVersion {
             DokiUrlMode::UrlPath => Ok(base.join(path)?),
             DokiUrlMode::UrlQuery { short } => {
                 let name = match short {
-                    true => {"v"}
-                    false => {"version"}
+                    true => "v",
+                    false => "version",
                 };
                 rewrite_url_query(base, path, name)
             }
@@ -74,53 +84,54 @@ impl DokiVersion {
 
 impl DokiSidebar {
     pub fn get_link(&self, base: &Url) -> Result<Url> {
+        println!("{:#?}", base.to_string());
+        println!("{:#?}", base.join("/a/").unwrap().to_string());
+
+
         match &self.url {
-            Some(s) => { Ok(base.join(s)?) }
-            _ => { Ok(base.join(&self.section)?) }
+            Some(s) => Ok(base.join(s)?),
+            _ => Ok(base.join(&self.section)?),
         }
     }
 }
 
 impl SidebarGroup {
     pub fn get_link(&self, base: &Url) -> Result<Url> {
-        rewrite_url!(self.rewrite_url ,base)
+        rewrite_url!(self.rewrite_url, base)
     }
 }
 
 impl SidebarGroupItemKind {
     pub fn get_link(&self, base: &Url) -> Result<Url> {
         match self {
-            Self::Simple(item) => { item.get_link(base) }
-            Self::List(item) => { item.get_link(base) }
+            Self::Simple(item) => item.get_link(base),
+            Self::List(item) => item.get_link(base),
         }
     }
 }
 
-
 impl SidebarList {
     pub fn get_link(&self, base: &Url) -> Result<Url> {
-        rewrite_url!(self.rewrite_url ,base)
+        rewrite_url!(self.rewrite_url, base)
     }
 }
 
 impl SidebarItem {
     pub fn get_link(&self, base: &Url) -> Result<Url> {
         match &self.url {
-            Some(s) => { rewrite_url(base, s) }
-            _ => { Ok(base.join(&self.name)?) }
+            Some(s) => rewrite_url_list(base, s),
+            _ => Ok(base.join(&self.name)?),
         }
     }
-    pub fn get_link_relative(&self, base: &Url, end:&str) -> Result<String> {
+    pub fn get_link_relative(&self, base: &Url, end: &str) -> Result<String> {
         let url = self.get_link(base)?;
         let out = match end.is_empty() {
-            true => {url}
-            false => {
-                url.join(end)?
-            }
+            true => url,
+            false => url.join(end)?,
         };
         match out.make_relative(&LOCALHOST) {
-            Some(s) => {Ok(s)},
-            None => {Err(DokiError::runtime_error("unsolved relative url"))}
+            Some(s) => Ok(s),
+            None => Err(DokiError::runtime_error("unsolved relative url")),
         }
     }
 }

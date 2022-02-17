@@ -5,7 +5,7 @@ impl DokiUrlMode {
         if let Some(o) = parse_string(root, key) {
             return match safe_url_string(&o).as_str() {
                 "url" => Some(Self::UrlQuery { short: false }),
-                "url-short" => Some(Self::UrlQuery{ short: true }),
+                "url-short" => Some(Self::UrlQuery { short: true }),
                 "path" | "url-path" => Some(Self::UrlPath),
                 "html" => Some(Self::HtmlData),
                 _ => None,

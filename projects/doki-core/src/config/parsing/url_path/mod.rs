@@ -1,6 +1,6 @@
 use super::*;
-mod rewrite_url;
 mod rewrite_path;
+mod rewrite_url;
 #[cfg(test)]
 mod test;
 
