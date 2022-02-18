@@ -1,8 +1,20 @@
 use super::*;
+use std::{
+    collections::hash_map::DefaultHasher,
+    hash::{Hash, Hasher},
+};
+use xxhash_rust::xxh3::{xxh3_64, Xxh3};
 
 impl Default for UrlBuilder {
     fn default() -> Self {
-        Self { domain: vec![], host: "localhost".to_string(), path: vec![], query: Default::default(), end: "".to_string() }
+        Self {
+            domain: vec![],
+            host: "localhost".to_string(),
+            base: vec![],
+            path: vec![],
+            query: Default::default(),
+            end: "".to_string(),
+        }
     }
 }
 
@@ -15,7 +27,8 @@ impl Debug for UrlBuilder {
 
 impl Display for UrlBuilder {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "/{}", self.path.join("/"))?;
+        let path: Vec<_> = self.base.iter().chain(self.path.iter()).collect();
+        write!(f, "/{}", path.join("/"))?;
         if !self.end.is_empty() {
             write!(f, ".{}", self.end)?
         }
@@ -37,6 +50,11 @@ impl PartialEq<&str> for UrlBuilder {
 }
 
 impl UrlBuilder {
+    pub fn new() -> Self {
+        let mut new = Self::default();
+        new.base.extend_from_slice(path);
+        new
+    }
     pub fn domain_join<S>(&mut self, dom: S)
     where
         S: Into<String>,
@@ -66,5 +84,11 @@ impl UrlBuilder {
         S: Into<String>,
     {
         self.end = end.into()
+    }
+    /// base 36 url hash
+    pub fn url_hashed(&self) -> String {
+        let mut hasher = Xxh3::default();
+        self.hash(&mut hasher);
+        format!("/{}/{}", self.base.join("/"), base36(hasher.finish()))
     }
 }
