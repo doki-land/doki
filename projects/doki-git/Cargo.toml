@@ -9,10 +9,10 @@ license = "MPL-2.0"
 edition = "2018"
 
 [dependencies]
-git2 = "0.14.2"
-chrono = "0.4.19"
+git2 = "0.15.0"
+chrono = "0.4.23"
 project-root = "0.2.2"
-url = "2.2.2"
+url = "2.3.1"
 #  octocrab = "0.15"
 jwalk = "0.6.0"
 pathdiff = "0.2.1"

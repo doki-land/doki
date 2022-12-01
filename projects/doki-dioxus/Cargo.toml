@@ -10,23 +10,23 @@ edition = "2018"
 
 [dependencies]
 wasm-logger = "0.2.0"
-serde = "1.0.136"
-log = "0.4.14"
-rsass = "0.23.4"
-parcel_css = "1.0.0-alpha.19"
+serde = "1.0.148"
+log = "0.4.17"
+rsass = "0.26.0"
+parcel_css = "1.0.0-alpha.32"
 #parking_lot = { version = "0.12.0", features = ["wasm-bindgen"] }
-config = "0.12.0"
+config = "0.13.2"
 
 [dependencies.doki-core]
 version = "0.1.*"
 path = "../doki-core"
 
 [dependencies.dioxus]
-version = "0.2.3"
+version = "0.2.4"
 features = ["web", "ssr"]
 
 [dev-dependencies]
-wasm-bindgen = "0.2.79"
+wasm-bindgen = "0.2.83"
 
 [features]
 default = []
